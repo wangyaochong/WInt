@@ -12,11 +12,11 @@
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
         <property name="jdbcUrl"
-        value="jdbc:mysql://127.0.0.1/teachingplatform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8">
+        value="jdbc:mysql://127.0.0.1/wint?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8">
         </property>
         <property name="user" value="wangyaochong"></property>
         <property name="password" value="qwerqwer"></property>
-        <property name="maxPoolSize" value="5000"></property>
+        <property name="maxPoolSize" value="50"></property>
         <property name="minPoolSize" value="5"></property>
         <property name="acquireIncrement" value="5"></property>
         <property name="loginTimeout" value="1200"></property>

@@ -20,16 +20,12 @@ app.controller("test",function ($scope,crud) {
     console.log("postObjectResult2","testRequestBody",postObjectResult2);
 
 
-
-
-
-
     crud.postObjectPromise("test/testRequestBody",obj).then(function (data) {
         console.log("postObjectPromise","testRequestBody",data);
     })
-    crud.getObjectPromise("test/testRequestBody",obj).then(function (data) {
-        console.log("getObjectPromise","testRequestBody",data);
-    })
+    // crud.getObjectPromise("test/testRequestBody",obj).then(function (data) {
+    //     console.log("getObjectPromise","testRequestBody",data);
+    // })
     crud.getObjectPromise("test/testModelAttribute",obj).then(function (data) {
         console.log("getObjectPromise","testModelAttribute",data);
     })

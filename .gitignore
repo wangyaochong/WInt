@@ -2,6 +2,7 @@ target
 .idea
 *.iml
 node_modules
+dist
 
 lib.js
 app.js
