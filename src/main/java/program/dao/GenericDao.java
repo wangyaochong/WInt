@@ -14,6 +14,7 @@ public class GenericDao extends BaseDao {
     public <T> Integer simpleDelete(T condition){//返回通过一个查询条件【删除的列数】
         Pair<String, Map<String, Object>> deleteQuestionMarkSql_and =
                 SingleClassSqlConstructor.createQuestionMarkHql_and(condition,SingleClassSqlConstructor.type_DELETE);
+
         Query query = getCurrentSession().createQuery(deleteQuestionMarkSql_and.getKey());
         SingleClassSqlConstructor.setParam(query,deleteQuestionMarkSql_and.getValue());
         return query.executeUpdate();
