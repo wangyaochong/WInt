@@ -1,13 +1,11 @@
 package program.controller;
 
-import org.junit.Test;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import program.entity.TestEntity;
-import program.entity.entityInterface.IType;
+import program.entity.entityInterface.IUserType;
 import program.service.CrudService;
 import program.service.PageListService;
 import program.service.bean.PageBean;
@@ -75,7 +73,7 @@ public class TestController {
                 calendar.setTime(tmpDate);
                 calendar.add(calendar.DATE,-1);
                 tmpDate=calendar.getTime();
-                TestEntity testEntity=new TestEntity("test",18,tmpDate.getTime(),tmpDate.getTime(),"test","testDescription", IType.TEST);
+                TestEntity testEntity=new TestEntity("test",18,tmpDate.getTime(),tmpDate.getTime(),"test","testDescription", IUserType.USER_TYPE_ADMIN);
                 crudService.saveOrUpdateOne(testEntity);
             }
         }
