@@ -13,8 +13,8 @@ public class Group implements IEntity{
     @Id
     @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(generator = "generator")
-
     String id;//数据id
+
     String name;//分支名称
     String description;//分支机构描述
     String address;//分支所在位置

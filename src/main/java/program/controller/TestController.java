@@ -14,9 +14,6 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.util.*;
 
-/**
- * Created by【王耀冲】on 【2017/6/11】 at 【20:58】.
- */
 @Controller
 @RequestMapping("test")
 public class TestController {

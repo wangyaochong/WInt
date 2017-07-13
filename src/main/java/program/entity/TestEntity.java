@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 @Data
 @Entity
-public class TestEntity implements IEntity,IConsumingItemEntity,IObjectEntity{
+public class TestEntity implements IEntity,IConsumingItemEntity,IObjectEntity,Comparable<TestEntity>{
     @Id
     @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(generator = "generator")
@@ -34,5 +34,10 @@ public class TestEntity implements IEntity,IConsumingItemEntity,IObjectEntity{
         this.title = title;
         this.description = description;
         this.type = type;
+    }
+
+    @Override
+    public int compareTo(TestEntity o) {
+        return this.getAge()-o.getAge();
     }
 }

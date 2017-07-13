@@ -18,6 +18,7 @@
         <property name="maxUploadSizePerFile" value="1048576000"></property>
     </bean>
     <context:component-scan base-package="program"></context:component-scan>
+    <context:component-scan base-package="test"></context:component-scan>
     <!--<context:property-placeholder file-encoding="UTF-8" location="classpath:*.properties"></context:property-placeholder>-->
     <mvc:default-servlet-handler></mvc:default-servlet-handler>
     <mvc:annotation-driven>
