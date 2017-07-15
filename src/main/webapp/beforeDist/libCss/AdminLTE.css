@@ -3171,7 +3171,7 @@ table.text-center th {
   margin: 0 auto;
   margin-top: 10%;
 }
-/* User name [optional] */
+/* Customer name [optional] */
 .lockscreen .lockscreen-name {
   text-align: center;
   font-weight: 600;
@@ -3185,7 +3185,7 @@ table.text-center th {
   margin: 10px auto 30px auto;
   width: 290px;
 }
-/* User image */
+/* Customer image */
 .lockscreen-image {
   border-radius: 50%;
   position: absolute;

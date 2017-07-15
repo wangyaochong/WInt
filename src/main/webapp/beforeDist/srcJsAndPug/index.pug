@@ -6,12 +6,13 @@ html
         link(rel="icon" href="/WInt/dist/img/favico.ico" type="image/x-icon")
         link(rel="stylesheet" href="/WInt/dist/app/lib.css")
         link(rel="stylesheet" href="/WInt/dist/app/app.css")
-body
+body(ng-controller='index')
     //div(ng-include="urlControllerTest")
     div(ng-include='distHtmlControllerUrl+"navbar.html"')
 
-    div div before view
     ui-view
-    h1 非常好的dddddddccccdaaa
+
+
+
     script(src="/WInt/dist/app/lib.js")
     script(src="/WInt/dist/app/app.js")

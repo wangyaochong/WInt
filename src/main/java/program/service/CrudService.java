@@ -3,7 +3,7 @@ package program.service;
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import program.dao.GenericDao;
-import program.entity.entityInterface.IEntity;
+import program.entity.interfaces.IEntity;
 import program.entity.util.EntityUtil;
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -42,7 +42,7 @@ public class CrudService {
     public void deleteOneById(Class<?> clazz, String id) {
         try {
             IEntity o = (IEntity) clazz.newInstance();
-            o.setId(id);
+//            o.setId(id);
             genericDao.getCurrentSession().delete(o);
         } catch (InstantiationException e) {
             e.printStackTrace();

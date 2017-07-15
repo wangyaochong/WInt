@@ -1,0 +1,36 @@
+.modal-content
+    //.modal-header
+        h4.modal-title Create New Branch Office
+    .modal-body
+        form(action='', method='post', role='form')
+            legend Create New Branch Office
+            .form-group
+                label(for='name') name
+                input.form-control(type='text', name='name', id='name', placeholder='Input...' ng-model="branchGroup.name")
+            .form-group
+                label(for='description') description
+                input.form-control(type='text', name='description', id='description', placeholder='Input...'  ng-model="branchGroup.description" )
+            .form-group
+                label(for='address') address
+                input.form-control(type='text', name='address', id='address', placeholder='Input...'  ng-model="branchGroup.address" )
+
+            //button.btn.btn-primary(type='submit') Submit
+
+        //table.table(class='table-hover')
+            tbody
+                tr
+                    td Branch Office Name
+                    td
+                        input(type='text' ng-model="branchGroup.name")
+                tr
+                    td Branch Office Description
+                    td
+                        input(type='text' ng-model="branchGroup.description")
+                tr
+                    td Branch Office Address
+                    td
+                        input(type='text' ng-model="branchGroup.address")
+
+    .modal-footer
+        button.btn.btn-default(type='button', ng-click="closeModal()") Close
+        button.btn.btn-primary(type='button' ng-click="clickYes()") Yes

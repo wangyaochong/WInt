@@ -1,0 +1,15 @@
+
+div(ng-controller='customerList')
+    table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" )
+        tbody
+            tr(ng-repeat="item in $data")
+                td(ng-cloak="" title=" 'email' ",filter="{email:'text'}") {{item.email}}
+                td(ng-cloak="" title=" 'name' ",filter="{name:'text'}" ) {{item.name}}
+                td(ng-cloak="" title=" 'phone' " filter="{phoneNumber:'text'}") {{item.phoneNumber}}
+                td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}
+                td(ng-cloak="" title=" 'birthDate' " filter=" {birthDate:'text'} ")  {{item.birthDate}}
+                td(ng-cloak="" title=" 'gender' " filter="{gender:'text'}") {{item.gender}}
+
+
+
+

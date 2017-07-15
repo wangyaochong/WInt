@@ -1,4 +1,17 @@
-$stateProvider.state('test',{
-    url: '/test',
-    templateUrl:distHtmlControllerUrl+"test.html"
+$stateProvider
+    .state('componentNav',{
+        url:'/componentNav',
+        templateUrl:distHtmlControllerUrl+'componentNav.html'
+    })
+    .state('component',{
+        url:'/component',
+        templateUrl:distHtmlControllerUrl+"component.html"
+})
+    .state('customerList',{
+        url:'/customerList',
+        templateUrl:distHtmlControllerUrl+'customerList.html'
+    })
+    .state('component.customerNew',{
+        url:'/customerNew',
+        templateUrl:distHtmlControllerUrl+"customerNew.html"
 });

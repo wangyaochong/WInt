@@ -45,7 +45,7 @@ var gulpModules = {
     browserSync:require("browser-sync").create()
 }
 var processPath = {
-    js2oneSrcPath: ['../beforeDist/srcJsAB/begin.js', '../beforeDist/srcJsAB/state.js', '../beforeDist/srcJsAB/end.js', '../beforeDist/srcJsAndPug/**/*.js'],
+    js2oneSrcPath: ['../beforeDist/srcJsAB/begin.js', '../beforeDist/srcJsAB/state.js', '../beforeDist/srcJsAB/stateTest.js', '../beforeDist/srcJsAB/end.js', '../beforeDist/srcJsAndPug/**/*.js','../beforeDist/srcJsAndPug/*.js','../beforeDist/srcJsAndPug/**/**/*.js'],
     js2onePath: '../dist/app/',
     js2oneLibPath: [
         //jquery
@@ -124,7 +124,7 @@ var processPath = {
     css2onePath: '../dist/app/',
     sass2cssSrcPath:['../beforeDist/srcScss/*.scss'],
     sass2cssDestPath:'../dist/srcCss/',
-    pugPath:'../beforeDist/srcJsAndPug/**/*.pug',
+    pugPath:['../beforeDist/srcJsAndPug/**/*.pug','../beforeDist/srcJsAndPug/*.pug','../beforeDist/srcJsAndPug/**/**/*.pug'],
     htmlPath:'../dist/html/'
 }
 var taskNames = {
@@ -216,7 +216,7 @@ function browserSync() {
 function reload() {
     setTimeout(function () {
         gulpModules.browserSync.reload();
-    },500)
+    },1000)
 }
 gulpModules.gulp.task(taskNames.watch, function () {
     //监视源码是否有修改，并执行相应的任务
@@ -232,7 +232,7 @@ gulpModules.gulp.task(taskNames.watch, function () {
         gulpModules.gulpUtil.log("File-->" + event.path);
         gulpModules.gulpUtil.log("Event:" + event.type);
     });
-    //browserSync();
+     browserSync();
 });
 
 gulpModules.gulp.task('default', [taskNames.watch, taskNames.sass2css,taskNames.pugToHtml, taskNames.libMany2one,taskNames.jsManyToOne,taskNames.cssManyToOne]);

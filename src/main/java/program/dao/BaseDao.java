@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository(value = "BaseDao")
 public class BaseDao{
 //    Session session;//给子类留一个可用的session
-    @Autowired
+//    @Autowired
     private SessionFactory sessionFactory;//sessionFactory只有自己可见
     public Session getCurrentSession() {
         return sessionFactory.getCurrentSession();

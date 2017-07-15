@@ -10,6 +10,7 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd"
 >
+
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <property name="defaultEncoding" value="utf-8"></property>
         <!--内存中最大有40MB-->
@@ -17,6 +18,10 @@
         <!--文件大小最大为1000MB-->
         <property name="maxUploadSizePerFile" value="1048576000"></property>
     </bean>
+
+    <!--<bean class="org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter"></bean>-->
+    <bean class="org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration"></bean>
+
     <context:component-scan base-package="program"></context:component-scan>
     <context:component-scan base-package="test"></context:component-scan>
     <!--<context:property-placeholder file-encoding="UTF-8" location="classpath:*.properties"></context:property-placeholder>-->

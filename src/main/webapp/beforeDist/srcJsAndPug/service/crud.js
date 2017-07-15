@@ -5,6 +5,9 @@ app.service("crud",function ($http,$q) {
     }
     //用于RequestParam
     this.getQueryResult=function (url, query) {
+        if(query===undefined){
+            query="";
+        }
         var result=null;
         $.ajax({
             url: buildUrl(url,query),
@@ -19,6 +22,9 @@ app.service("crud",function ($http,$q) {
 
     //用于RequestParam
     this.getQueryPromise=function (url, query) {
+        if(query===undefined){
+            query="";
+        }
         var defer=$q.defer();
         $http({
             url:buildUrl(url,query),
@@ -33,6 +39,9 @@ app.service("crud",function ($http,$q) {
 
     //用于RequestParam
     this.postQueryResult=function (url, query) {
+        if(query===undefined){
+            query="";
+        }
         var result=null;
         $.ajax({
             url: buildUrl(url,query),
@@ -47,6 +56,9 @@ app.service("crud",function ($http,$q) {
 
     //用于RequestParam
     this.postQueryPromise=function (url, query) {
+        if(query===undefined){
+            query="";
+        }
         var defer=$q.defer();
         $http({
             url:buildUrl(url,query),
@@ -61,6 +73,7 @@ app.service("crud",function ($http,$q) {
 
     //用于RequestBody
     this.postObjectResult=function (url, obj) {
+
         var result=null;
         $.ajax({
             url:url,

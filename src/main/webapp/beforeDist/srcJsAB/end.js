@@ -1,5 +1,5 @@
 //$urlRouterProvider.when('', '/test');//设置默认的路由
-$urlRouterProvider.otherwise("/test");
+$urlRouterProvider.otherwise("/componentNav");
 {"##end##"}
 
 

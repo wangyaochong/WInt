@@ -33,19 +33,21 @@
         <!--<property name="password" value="qwerqwer"></property>-->
     <!--</bean>-->
 
-    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" scope="singleton">
-        <property name="dataSource" ref="dataSource"></property>
-        <property name="hibernateProperties">
-            <props>
-                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
-                <prop key="hibernate.show_sql">false</prop>
-                <prop key="hibernate.format_sql">false</prop>
-                <prop key="current_session_context_class">thread</prop>
-            </props>
-        </property>
-        <property name="packagesToScan" value="program.entity"></property>
-    </bean>
+
+
+    <!--<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" scope="singleton">-->
+        <!--<property name="dataSource" ref="dataSource"></property>-->
+        <!--<property name="hibernateProperties">-->
+            <!--<props>-->
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>-->
+                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <!--<prop key="hibernate.show_sql">false</prop>-->
+                <!--<prop key="hibernate.format_sql">false</prop>-->
+                <!--<prop key="current_session_context_class">thread</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+        <!--<property name="packagesToScan" value="program.entity"></property>-->
+    <!--</bean>-->
 
 
     <!--packagesToScan可以代替annotateClasses属性-->
@@ -59,15 +61,21 @@
     <!--<property name="annotatedPackages" value="program.entity"></property>-->
 
 
-    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-        <property name="sessionFactory" ref="sessionFactory"></property>
-    </bean>
+    <!--<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">-->
+        <!--<property name="sessionFactory" ref="sessionFactory"></property>-->
+        <!--&lt;!&ndash;<property name="dataSource" ref="dataSource"></property>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name=""&ndash;&gt;-->
+    <!--</bean>-->
     <tx:advice id="transactionInterceptor" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="*" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
     <aop:config>
+        <aop:pointcut id="txAop"
+                      expression="execution(* program.controller.*.*(..)) or execution(* program.dao.*.*(..)) or execution(* program.service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="txAop"></aop:advisor>
+    </aop:config>
 
 
         <!--注意，此处需要配置aspectJ的pom依赖，不然会报错：提示找不到aspectJweaver-->
@@ -78,10 +86,8 @@
             #在配置了transactionManager的条配件下，如果需要调用getCurrentSession，aop一定要配置到相关的方法
         -->
                       <!--expression="execution(* program.dao.*.*(..)) or execution(* program.service.*.*(..))"></aop:pointcut>-->
-        <aop:pointcut id="txAop"
-                      expression="execution(* program.controller.*.*(..)) or execution(* program.dao.*.*(..)) or execution(* program.service.*.*(..))"></aop:pointcut>
-        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="txAop"></aop:advisor>
-    </aop:config>
+
+
 
     <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 
@@ -107,10 +113,16 @@
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
             </props>
         </property>
+        <!--<property name=""-->
+
     </bean>
-
-
-    <jpa:repositories base-package="program.repository" transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"></jpa:repositories>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <jpa:repositories base-package="program.repository" repository-impl-postfix="Impl"
+                      entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"></jpa:repositories>
     <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
     <!--如果使用上面这句，就可以不用配置事务切面，
     在每一个方法中自己使用@Transactional标记，可以进行事务操作-->

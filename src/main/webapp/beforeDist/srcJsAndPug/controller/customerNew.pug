@@ -1,0 +1,30 @@
+
+div(ng-controller='customerNew')
+    form(method='post', role='form' name="customerNewForm" autocomplete="off")
+        legend Create New Customer
+        .form-group
+            label(for='email') email
+            input.form-control(type='text', name='email', id='email', placeholder='email...' ng-model="customer.email" )
+            //p(ng-show='customerNewForm.email.$invalid') please input a valid email
+        .form-group
+            label(for='name') name
+            input.form-control(type='text', name='name' id='name', placeholder='name...' ng-model='customer.name' )
+            //p(ng-show='customerNewForm.name.$invalid') please input your name
+        .form-group
+            label(for='phoneNumber') phone number
+            input.form-control(type='text' name='phoneNumber' id='phoneNumber' placeholder='phone number...' ng-model='customer' +
+            '.phoneNumber' )
+            //p(ng-show='customerNewForm.phoneNumber.$invalid') please input your phone number
+        .form-group
+            label(for='age') age
+            input.form-control(type='number' name='age' id='age'  placeholder='age...' ng-model='customer.age')
+        .form-group
+            label(for='birthDate') birth date
+            input.form-control(type='text' name='birthDate' id='birthDate' placeholder='birth date....' ng-model='customer.birthDate')
+        .form-group
+            label(for='gender') gender
+            input.form-control(type='text' name='gender' id='gender' placeholder='gender...' ng-model='customer.gender')
+    button.btn.btn-primary(ng-click='localSaveCustomer()') Submit
+
+
+    //button.btn.btn-primary(type='submit' ng-disabled="customerNewForm.$invalid") Submit

@@ -2,7 +2,7 @@ package program.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import program.entity.entityInterface.IEntity;
+import program.entity.interfaces.IEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,8 +17,8 @@ public class SalarySendConfig implements IEntity{
     @GeneratedValue(generator = "generator")
 
     String id;//数据id
+
     Integer sendingDate;//发放工资的日期
     String payCardNumber;//发放工资的帐号
     Integer nextSendingDate;//修改发放工资的日期只在下一个月生效
-
 }
