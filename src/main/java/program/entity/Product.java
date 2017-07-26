@@ -1,38 +1,39 @@
 package program.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import program.entity.interfaces.IEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
-public class Product implements IEntity{
+@NoArgsConstructor
+@AllArgsConstructor
+public class Product{
+    //这里的product就是可以消耗的原材料了
+    //包括各种视频佐料，包装盒、垃圾袋、纸巾、手套等
+    //这张表记录的是仓库中正有的库存
     @Id
     @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(generator = "generator")
     String id;//数据id
-
     String name;//产品名称
     String description;//产品描述
-    Double price;//产品价格
-    Long createDate;//可以用于过期报警
+    String imagePath;
+    Double unitPrice;//产品单价
 
-    Long timeToBad;//保质期（保存两个字段没关系，后续更方便，因此保质期和过期时间一旦录入就不会变了）
-    Long badDate;//过期日期时间
+    Date productionDate;//可以用于过期报警，生产日期
+    Integer daysToBad;//保质期，以天数为单位
+    Date badDate;//可以用于过期报警
 
-    Long inDate;//入库时间
-    Long outDate;//出库时间
+    Date inDate;//入库时间
+    Integer count;
+    Integer predictedConsumingDays;
 
-    //因为一个产品可能就有一条交易记录，因此不能记录count字段
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     BranchGroup branchGroup;//该产品所处在的分支
-
-    @ManyToOne
-    Category category;//该产品所属类别
 }

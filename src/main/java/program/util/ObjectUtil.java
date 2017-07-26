@@ -24,7 +24,7 @@ public class ObjectUtil {
         }
         return true;
     }
-    public static <T> boolean checkAllFieldNullOrEmpty(T obj){
+    public static <T> boolean checkAllFieldNullOrEmptyAndSetEmptyNull(T obj){
         if(obj==null){
             return true;
         }
@@ -33,7 +33,7 @@ public class ObjectUtil {
             allField.setAccessible(true);
             try {
                 if(allField.get(obj)==null|| org.springframework.util.ObjectUtils.isEmpty(allField.get(obj))){
-
+                    allField.set(obj,null);
                 }else{
                     return false;
                 }

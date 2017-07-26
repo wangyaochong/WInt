@@ -70,9 +70,9 @@ var processPath = {
         '../beforeDist/libJs/bootstrap-datepicker.js',
         '../beforeDist/libJs/bootstrap-datepicker.zh-CN.min.js',
         //autosize#textarea自动变化尺寸插件
-        '../beforeDist/libJs/autosize.js',
-        //slick#滑动图片插件
-        '../beforeDist/libJs/slick.js',
+        // '../beforeDist/libJs/autosize.js',
+        // slick#滑动图片插件
+        // '../beforeDist/libJs/slick.js',
         //bootstrap-fileinput#文件上传插件
         '../beforeDist/libJs/canvas-to-blob.js',
         '../beforeDist/libJs/sortable.js',
@@ -90,13 +90,12 @@ var processPath = {
         //angular-ui-select依赖sanitize.js
         '../beforeDist/libJs/angular-sanitize.js',
         //视频播放插件
-        '../beforeDist/libJs/video.js',
-        '../beforeDist/libJs/videojs-ie8.js',
+        // '../beforeDist/libJs/video.js',
+        // '../beforeDist/libJs/videojs-ie8.js',
 
 
         '../beforeDist/libJs/lodash.js',
-
-
+        // '../beforeDist/libJs/xeditable.js',
         //侧边菜单插件
         // '../beforeDist/libJs/slideout.js',
         //一个效果插件
@@ -108,7 +107,6 @@ var processPath = {
         // '../beforeDist/libCss/AdminLTE.css',
         // '../beforeDist/libCss/bootstrap-select.css',
 
-        
         '../beforeDist/libCss/bootstrap.css',
         '../beforeDist/libCss/ng-table.css',
         '../beforeDist/libCss/fileinput.css',
@@ -118,7 +116,8 @@ var processPath = {
         // angular-ui-select
         '../beforeDist/libCss/select.css',
         //video.js
-        '../beforeDist/libCss/video-js.css',
+        // '../beforeDist/libCss/video-js.css',
+        // '../beforeDist/libCss/xeditable.css',
     ],
     css2oneSrcPath: ['../dist/srcCss/*.css'],
     css2onePath: '../dist/app/',
@@ -232,7 +231,7 @@ gulpModules.gulp.task(taskNames.watch, function () {
         gulpModules.gulpUtil.log("File-->" + event.path);
         gulpModules.gulpUtil.log("Event:" + event.type);
     });
-     browserSync();
+     // browserSync();
 });
 
 gulpModules.gulp.task('default', [taskNames.watch, taskNames.sass2css,taskNames.pugToHtml, taskNames.libMany2one,taskNames.jsManyToOne,taskNames.cssManyToOne]);

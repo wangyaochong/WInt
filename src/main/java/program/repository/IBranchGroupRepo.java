@@ -6,6 +6,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import program.entity.BranchGroup;
 
 @RepositoryRestResource
-public interface IBranchGroupRepo extends JpaRepository<BranchGroup,String> ,JpaSpecificationExecutor<BranchGroup> {
-
+public interface IBranchGroupRepo extends JpaRepository<BranchGroup,Long> ,JpaSpecificationExecutor<BranchGroup> {
+    BranchGroup queryBranchGroupByName(String name);
 }

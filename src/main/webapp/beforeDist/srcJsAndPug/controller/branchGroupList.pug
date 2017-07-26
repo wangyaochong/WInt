@@ -1,0 +1,25 @@
+div(ng-controller='branchGroupList')
+
+    .panel(class='panel-default')
+        .panel-body
+            button.btn.btn-default.pull-right(type='button' ng-click="addNewBranchGroup()") add
+            table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" autocomplete="off" )
+                tbody
+                    tr(ng-repeat="item in $data")
+                        //td(ng-cloak="" title=" 'email' ", sortable=" 'email' " filter="{email:'text'}") {{item.email}}
+                        td(ng-cloak="" title=" 'name' ", sortable=" 'name' "  filter="{name:'text'}" ) {{item.name}}
+                        td(ng-cloak="" title=" 'description' "  sortable=" 'description' "  filter="{description:'text'}") {{item.description}}
+                        //td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}
+                        td(ng-cloak="" title=" 'createDate' "   sortable=" 'createDate' "   filter=" {createDate:'text'} ") {{item.createDate|date:"yyyy/MM/dd"}}
+                        //td(ng-cloak="" title=" 'gender' "  sortable=" 'gender' " filter="{gender:'text'}") {{item.gender}}
+                        td(ng-cloak="" title=" 'operation' ")
+                            .btn-group.pull-right
+                                button.btn.btn-default(type='button' ng-click="addNewBranchGroup(item.id);customerListTableParams.reload() ") edit
+                                button.btn.btn-default(type='button' ng-click="deletebranchGroups(item.id);customerListTableParams.reload() ") delete
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
-app.controller('testGroupNewModal',function ($scope, groupNewModal) {
+app.controller('testGroupNewModal',function ($scope, branchGroupNewModal) {
     $scope.openModal=function () {
-        groupNewModal.showModal(function (data) {
+        branchGroupNewModal.showModal(function (data) {
             console.log(data);
         })
     }

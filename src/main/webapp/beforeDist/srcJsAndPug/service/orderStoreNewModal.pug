@@ -1,0 +1,36 @@
+
+.modal-content
+    .modal-body
+        form(action='', method='post', role='form' autocomplete="off")
+            legend New Order
+            .form-group
+                label Order time
+                input.form-control(type='datetime-local' name='createDate' id='createDate' placeholder='create date....' ng-model='order.orderBeginDateTime' ng-disabled="true")
+                label(for='description') Cashier
+                input.form-control( name='description', id='description', placeholder='Input...'  ng-model="currentUser.name" ng-disabled="true")
+                label Order type
+                input.form-control(ng-model="order.orderType" ng-disabled="true")
+                label(for='name') Table Number
+                input.form-control(type='number', name='name', id='name', placeholder='Input...' ng-model="branchGroup.name")
+                table(class='table table-hover')
+                    thead
+                        tr
+                            th name
+                            th discount
+                            th price
+                            th number
+                    tbody
+                        tr(ng-repeat="x in order.foodList")
+                            td {{x.name}}
+                            td {{x.discountPercent}}%
+                            td {{x.price}}/RMB
+                            td {{x.count}}
+                    tfoot
+                        tr
+                            td(colspan=4) total price: {{getFoodListPrice(order.foodList)}}/RMB
+
+    .modal-footer
+        button.btn.btn-default(type='button', ng-click="closeModal()") Close
+        button.btn.btn-primary(type='button' ng-click="clickYes()") Yes
+//script.
+//    createDate.value = new Date().Format("yyyy-MM-ddThh:mm:ss");

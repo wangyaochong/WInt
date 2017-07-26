@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default" role="navigation" ng-controller="navbar">
   <!-- Brand and toggle get grouped for better mobile display-->
   <div class="navbar-header">
     <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a class="navbar-brand" href="#">Home</a>
@@ -7,8 +7,15 @@
   <!-- Collect the nav links, forms, and other content for toggling-->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      <li><a ui-sref="customerList">Customers</a></li>
-      <li><a href="#">Link</a></li>
+      <li><a ui-sref="branchGroupList" ng-class="{'currentNav':stateName=='branchGroupList'}" ng-click="stateName='branchGroupList' ">Branch</a></li>
+      <li><a ui-sref="foodList" ng-class="{'currentNav':stateName=='foodList'}" ng-click="stateName='foodList'  "> Food</a></li>
+      <li><a ui-sref="orderList" ng-class="{'currentNav':stateName=='orderList'}" ng-click="stateName='orderList'  "> Order</a></li>
+      <li><a ui-sref="productList" ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ">Inventory</a></li>
+      <li><a ui-sref="productList" ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ">Equipment</a></li>
+      <li><a ui-sref="productList" ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ">Statistics</a></li>
+      <li><a ui-sref="customerList" ng-class="{'currentNav':stateName=='customerList'}" ng-click="stateName='customerList'  "> Customer</a></li>
+      <li><a ui-sref="employeeList" ng-class="{'currentNav':stateName=='employeeList'}" ng-click="stateName='employeeList'  ">Employee</a></li>
+      <li><a ui-sref="componentNav">componentNav</a></li>
     </ul>
     <!--form.navbar-form.navbar-left(role='search')
     .form-group
@@ -16,7 +23,7 @@
     button.btn.btn-default(type='submit') Submit
     -->
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="#">Link</a></li>
+      <li><a href="/WInt/dist/html/logIn.html">Log In</a></li>
       <li class="dropdown"><a class="dropdown-toggle" href="#" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
         <ul class="dropdown-menu">
           <li><a href="#">Action</a></li>

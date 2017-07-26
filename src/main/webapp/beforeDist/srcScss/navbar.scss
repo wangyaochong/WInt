@@ -5,6 +5,8 @@ nav.navbar.navbar-default{
 ul.nav.navbar-nav>li:hover{
   background-color: $hoverButton;
 }
+
+
 button.navbar-toggle:hover{
   background-color: $hoverButton ;
 }
@@ -39,4 +41,8 @@ ul.dropdown-menu>li>a{
 ul.dropdown-menu>li>a:hover{
   color:$navTextColor!important;
   background-color: $hoverButton;
+}
+
+.currentNav{
+  background-color: $hoverButton!important;
 }

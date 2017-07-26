@@ -1,0 +1,54 @@
+div(ng-controller='orderList')
+
+    .panel(class='panel-default')
+        .panel-body
+            div
+                h3.inline-block Orders
+                button.btn.btn-default.pull-right(type='button' ng-click="addNewCustomer()") add
+
+            table.table.table-bordered(class=' table-hover' ng-table="ordersTableParams" show-filter="true" autocomplete="off" )
+                tbody
+                    tr(ng-repeat="item in $data")
+                        td(ng-cloak="" title=" 'Create time' ", sortable=" 'orderBeginDateTime' " filter="{orderBeginDateTime:'text'}") {{item.orderBeginDateTime|date:"yyyy-MM-dd HH:mm:ss"}}
+                        td(ng-cloak="" title=" 'Cashier' ", sortable=" 'cashier' "  filter="{cashier:'text'}" ) {{item.cashier.name}}
+                        td(ng-cloak="" title=" 'Order type' "  sortable=" 'orderType' "  filter="{orderType:'text'}") {{item.orderType}}
+                        td(ng-cloak="" title=" 'Total money' "  sortable=" 'totalPrice' " filter="{totalPrice:'text'}") {{item.totalPrice}}/RMB
+                        td(ng-cloak="" title=" 'Food list' "   )
+                            h4(ng-repeat="f in item.foodList") {{f.name}}
+                        td(ng-cloak="" title=" 'Operation' ")
+
+
+
+
+
+
+
+    //.panel(class='panel-default')
+        .panel-body
+            div
+                h3.inline-block Orders
+                button.btn.btn-default.pull-right(type='button' ng-click="addNewCustomer()") add
+            table.table(class='table-bordered table-hover')
+                thead
+                    tr
+                        th Create time
+                        th Cashier
+                        th Order type
+                        th Food list
+                        th Total Money
+                tbody
+                    tr(ng-repeat="o in orders")
+                        td {{o.orderBeginDateTime | date:"yyyy-MM-dd HH:mm:ss"}}
+                        td {{o.cashier.name}}
+                        td {{o.orderChannel}}
+                        td
+                            h4(ng-repeat="f in o.foodList") {{f.name}}
+                        td {{o.totalPrice}}/RMB
+
+
+
+
+
+
+
+

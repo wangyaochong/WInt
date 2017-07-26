@@ -2,6 +2,7 @@ package test;
 
 import lombok.Data;
 import org.junit.Test;
+import program.entity.enums.EnumRole;
 
 enum MyEnum{
     ONE(1,"1","一"),
@@ -31,7 +32,11 @@ enum MyEnum{
 
 }
 public class TestEnum {
-
+    @Test
+    public void testEnumRole(){
+        System.out.println(EnumRole.values().toString());
+        System.out.println(EnumRole.BRANCH_ADMIN);
+    }
     @Test
     public void test(){
         System.out.println(MyEnum.ONE.getCharString());

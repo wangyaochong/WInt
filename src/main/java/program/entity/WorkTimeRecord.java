@@ -5,10 +5,11 @@ import org.hibernate.annotations.GenericGenerator;
 import program.entity.interfaces.IEntity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
-public class WorkTimeRecord implements IEntity {//每日工作时间记录
+public class WorkTimeRecord {//每日工作时间记录，一天一条记录
     @Id
     @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(generator = "generator")
@@ -17,10 +18,11 @@ public class WorkTimeRecord implements IEntity {//每日工作时间记录
     @ManyToOne(fetch = FetchType.EAGER)
     Employee employee;//员工
 
-    Integer totalWorkDayCount;//工作天数
-    Integer monthlyWorkDayCount;//当前周期工作天数
 
-    Long firstLogInTime;//记录第一次登录时间
-    Long lastLogOutTime;//记录最后一次登出时间
+    Date firstLogInTime;
+    Date lastLogOutTime;
+    Integer workHour;
+
+    Date date;//当日日期
 
 }

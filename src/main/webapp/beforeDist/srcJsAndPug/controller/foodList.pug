@@ -1,0 +1,63 @@
+div(ng-controller='foodList')
+    .panel(class='panel-default')
+
+        .panel-heading.clearfix
+            div
+                h3(style="display:inline-block") Shopping Cart
+                //button.btn.btn-primary.pull-right(type='button' ng-click="createNewOrder()" ng-disabled="orderFoodList.length==0") Create Order
+                button.btn.btn-primary.pull-right(type='button' ng-click="createNewOrder()" ) Create Order
+                button.btn.btn-danger.pull-right total：{{getFoodListPrice(orderFoodList)}}/RMB
+
+            legend
+            h5.inline-block(ng-if="orderFoodList.length==0") Please Order Food...
+            button.btn.btn-danger.pull-right(ng-click="clearCart()") Clear Cart   
+            div(style="width:100px;float:left;display:inline-block" ng-repeat="o in orderFoodList track by $index")
+                .thumbnail
+                    span.label.label-danger {{getOneFoodPrice(o)}}
+                    span.label.label-primary {{o.count}}
+                    a(href="" ng-click="removeFromOrderFoodList(o)")
+                        span.glyphicon.glyphicon-remove.pull-right
+                    img(alt='' ng-src="{{o.imagePath}}" style="height:100px")
+                    span {{o.name}}
+
+        .panel-heading
+            div
+                h3(style="display:inline-block") Categories
+                button.btn.btn-default.pull-right(type='button' ng-click="addNewCategory()" ng-if="false") add category
+            legend
+            .btn-group.btn-flat
+                button.btn.btn-default(ng-repeat="x in categories" ng-class="{'active':foodCategory==x.name}" ng-click="setCategory(x.name)") {{x.name}}
+                input.form-control.inline-block(placeholder="search name here..." style="width:200px" ng-model="foodName")
+                button.btn.btn-danger.pull-right(ng-click="clearSearch()") Clear
+
+
+        .panel-body(style="padding-top:10px")
+            div(class='col-xs-2 col-sm-2 col-md-2 col-lg-2' ng-repeat="f in foods track by $index" ng-class="{'bg-danger':f.isSuspended==false}" style="border:2px solid white"  )
+                .thumbnail
+                    img(alt='' ng-src="{{f.imagePath}}" style="height:150px")
+                    .caption
+                        h4 {{f.name}}
+                        div.inline-block
+                            p.inline-block(ng-class="{'discard-text':f.discountPercent!=0}")
+                                span Price：
+                                span.red-text {{f.price}}
+                                span /RMB
+                            p.inline-block(ng-if="f.discountPercent!=0")
+                                span Price：
+                                span.red-text {{f.price*(100-f.discountPercent)/100}}
+                                span /RMB
+                        p
+                            span Discount：
+                            span.red-text {{f.discountPercent}}
+                            span %
+                            a.btn.btn-primary.pull-right(ng-click="setFood(f)") edit
+                            a.btn.btn-danger.pull-right(ng-click="addToOrderFoodList(f)" ng-disabled="f.isSuspended==true") add to order
+        .panel-footer
+            ul.pagination
+                li(ng-if="foodsData.number!=0" )
+                    a(href='' ng-click="reloadFoodList(foodsData.number)") &laquo;
+                li.alert-danger
+                    a(href="" ng-class="{'alert-link':p==foodsData.number+1}" ng-repeat="p in pageNumbers" ng-click="reloadFoodList(p)") {{p}}
+                li(ng-if="foodsData.number!=foodsData.totalPages-1")
+                    a(href='' ng-click="reloadFoodList(foodsData.number+2)") &raquo;
+

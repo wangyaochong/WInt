@@ -1,22 +1,22 @@
 package program.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import program.entity.base.EntityBase;
-import program.entity.interfaces.IEntity;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Data
 @Entity
-public class Category extends EntityBase {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Category {
     @Id
-    @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
+    @GenericGenerator(name="generator",strategy = "increment")
     @GeneratedValue(generator = "generator")
-    String id;//数据id
-
+    Long id;//数据id
     String name;//分类名称
     String description;//分类描述
 }

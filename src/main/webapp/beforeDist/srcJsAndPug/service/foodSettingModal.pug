@@ -1,0 +1,16 @@
+.modal-content
+    .modal-body
+        form(action='', method='post', role='form' autocomplete="off")
+            legend {{food.name}}
+            .form-group
+                label(for='Price') Price
+                input.form-control(type='number', step="0.01" name='Price', id='Price', placeholder='Input...' ng-model="food.price")
+            .form-group
+                label(for='Discount') Discount
+                input.form-control(type='number', name='Discount', id='Discount', placeholder='Input...'  ng-model="food.discountPercent")
+            .form-group
+                label isSuspended
+                select.form-control(ng-options='x for x in suspendedOption' ng-model="food.isSuspended")
+    .modal-footer
+        button.btn.btn-default(type='button', ng-click="closeModal()") Close
+        button.btn.btn-primary(type='button' ng-click="clickYes()") Yes

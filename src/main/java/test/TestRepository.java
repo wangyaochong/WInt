@@ -9,7 +9,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import program.entity.test.TestEntity;
 import program.repository.ICustomerRepo;
 import program.repository.ICustomerRepoImpl;
+import program.repository.IEmployeeRepo;
 import program.repository.test.ITestEntityRepo;
+import program.service.FoodService;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,10 +23,25 @@ import javax.persistence.criteria.Root;
 @ContextConfiguration({"classpath:hibernate.xml","classpath:spring.xml"})
 public class TestRepository {
     @Resource
+    FoodService foodService;
+
+    @Resource
     ITestEntityRepo testEntityRepo;
     @Resource
     ICustomerRepo userRepo;
+    @Resource
+    IEmployeeRepo employeeRepo;
 
+    @Test
+    public void testFoodService(){
+        System.out.println(foodService);
+    }
+
+
+    @Test
+    public void testGetEmployee(){
+        System.out.println(employeeRepo.findAll());
+    }
 
     @Test
     public void testCustomerRepoImpl(){

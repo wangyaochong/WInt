@@ -1,14 +1,27 @@
 
 div(ng-controller='customerList')
-    table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" )
-        tbody
-            tr(ng-repeat="item in $data")
-                td(ng-cloak="" title=" 'email' ",filter="{email:'text'}") {{item.email}}
-                td(ng-cloak="" title=" 'name' ",filter="{name:'text'}" ) {{item.name}}
-                td(ng-cloak="" title=" 'phone' " filter="{phoneNumber:'text'}") {{item.phoneNumber}}
-                td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}
-                td(ng-cloak="" title=" 'birthDate' " filter=" {birthDate:'text'} ")  {{item.birthDate}}
-                td(ng-cloak="" title=" 'gender' " filter="{gender:'text'}") {{item.gender}}
+
+    .panel(class='panel-default')
+        .panel-body
+            div
+                h3.inline-block Customers
+                button.btn.btn-default.pull-right(type='button' ng-click="addNewCustomer()") add
+
+            table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" autocomplete="off" )
+                tbody
+                    tr(ng-repeat="item in $data")
+                        td(ng-cloak="" title=" 'email' ", sortable=" 'email' " filter="{email:'text'}") {{item.email}}
+                        td(ng-cloak="" title=" 'name' ", sortable=" 'name' "  filter="{name:'text'}" ) {{item.name}}
+                        td(ng-cloak="" title=" 'phone' "  sortable=" 'phoneNumber' "  filter="{phoneNumber:'text'}") {{item.phoneNumber}}
+                        td(ng-cloak="" title=" 'gender' "  sortable=" 'gender' " filter="{gender:'text'}") {{item.gender}}
+                        td(ng-cloak="" title=" 'birthDate' "   ) {{item.birthDate|date:"yyyy/MM/dd"}}
+                        td(ng-cloak="" title=" 'operation' ")
+                            .btn-group.pull-right
+                                button.btn.btn-default(type='button' ng-click="addNewCustomer(item.email);customerListTableParams.reload() ") edit
+                                button.btn.btn-default(type='button' ng-click="deletecustomers(item.email);customerListTableParams.reload() ") delete
+
+
+
 
 
 
