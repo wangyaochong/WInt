@@ -36,9 +36,10 @@ public class AppInitService implements ServletContextAware {
     @Resource
     IFoodInstanceRepo foodInstanceRepo;
     @Resource
-    FoodInstanceService foodInstanceService;
-    @Resource
     IFoodOrderRepo foodOrderRepo;
+    @Resource
+    FoodInstanceService foodInstanceService;
+
     public static final String nameStoreWangFuJing = "Wang Fu Jing Store";
     public static final String nameStoreDongSi = "Dong Si Street Store";
     public static final String nameStoreYongHeGong = "Yong He Gong Store";
@@ -49,7 +50,7 @@ public class AppInitService implements ServletContextAware {
     public static final int foodDiscount =0;
     static Long addSaveFoodEveryCount=1000l;
     static Long currentCount=0l;
-    static Long addNum=1l;
+    static Long addNum=2l;
     final String imageBasePath = "/WInt/dist/img/餐厅图片/";
     final Integer totalOrderDay = 10;
 
@@ -65,6 +66,7 @@ public class AppInitService implements ServletContextAware {
             initFood();
             initProduct();
             initOrder();
+            initFoodMonthlySellNumber();
         }
     }
     public Food getFishBurgerFromFoodList(List<Food> foodList){
@@ -76,26 +78,33 @@ public class AppInitService implements ServletContextAware {
         System.out.println("Fish burger not found");
         return null;
     }
+    public void initPackageDiscount(){
+        branchGroupRepo.findAll().forEach(branchGroup ->{
+            List<Food> foods = foodRepo.queryFoodsByBranchGroup(branchGroup);
+        });
+
+    }
+
     public List<FoodInstance> randomCreateFoodInstanceFromFoodList(List<Food> foodList, Integer foodCount, Integer fluctuateCount,Date orderCreateDate) {
         ArrayList<FoodInstance> foodInstanceList = new ArrayList<>();
         Integer count = foodCount + fluctuateCount / 2 - RandomUtils.nextInt(0, fluctuateCount + 1);//最终选取的食品数量可能多可能少，有波动
         Food fishBurgerFromFoodList = getFishBurgerFromFoodList(foodList);
         while (count > 0) {
-            if(currentCount.equals(addSaveFoodEveryCount)){
-                for(int i=0;i<addNum;i++){
-                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(fishBurgerFromFoodList,orderCreateDate)));//添加趋势增长的食品
-                }
-                currentCount=0l;
-                System.out.println("增加--->"+addNum+"--->条鱼汉堡的记录");
-                addNum+=1;
-            }else{
-                if(0==RandomUtils.nextInt(0,10)){
+//            if(currentCount.equals(addSaveFoodEveryCount)){
+//                for(int i=0;i<addNum;i++){
+//                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(fishBurgerFromFoodList,orderCreateDate)));//添加趋势增长的食品
+//                }
+//                currentCount=0l;
+//                System.out.println("增加--->"+addNum+"--->条鱼汉堡的记录");
+//                addNum+=2;
+//            }else{
+                if(0==RandomUtils.nextInt(0,30)){//某种明星产品的占比
                     foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(currentFoodIndex),orderCreateDate)));//选择权重更多的食品
                 }else{
                     foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(RandomUtils.nextInt(0, foodList.size())),orderCreateDate)));
                 }
-            }
-            currentCount++;
+//            }
+//            currentCount++;
             count--;
         }
         return foodInstanceList;
@@ -164,29 +173,81 @@ public class AppInitService implements ServletContextAware {
             productRepo.save(new Product(null, "Tissue", "Tissue", imageBasePath + "/消耗品/纸巾.jpg", 36.9d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Cola", "Cola", imageBasePath + "/消耗品/可乐.jpg", 5.8d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Beer", "Beer", imageBasePath + "/消耗品/啤酒.jpg", 4.5d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
-
         });
     }
-
+    public void initFoodMonthlySellNumber(){
+        branchGroupRepo.findAll().forEach(branchGroup -> {
+            foodRepo.queryFoodsByBranchGroup(branchGroup).forEach(food -> {
+                food.setMonthlySellNumber(foodInstanceService.getFoodSellingCountInBranch(branchGroup,food));
+                foodRepo.save(food);
+            });
+        });
+    }
     public void initFood() {
         categoryRepo.findAll().stream().forEach(category ->
                 branchGroupRepo.findAll().stream().forEach(branchGroup -> {//也许食品会空行，但都是按照顺序来排列
-                    if (category.getId() == 1) {//早餐
+                    if (category.getId().equals(1l) ) {//早餐
                         foodRepo.save(new Food(null, "Crisp potato cake", "Crisp potato cake", 5d, false, 0, imageBasePath + "/早餐/脆薯饼.png", 1, branchGroup, category,null));
                         foodRepo.save(new Food(null, "Crispy fritters", "Crispy fritters", 5.5d, false, 0, imageBasePath + "/早餐/脆香油条.png", 1, branchGroup, category,null));
-                        foodRepo.save(new Food(null, "Crispy chicken with wheat", "Crispy chicken with grilled wheat", 8d, false, 0, imageBasePath + "/早餐/大脆鸡扒麦满分.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Crispy chicken with wheat", "Crispy chicken with wheat", 8d, false, 0, imageBasePath + "/早餐/大脆鸡扒麦满分.png", 1, branchGroup, category,null));
                         foodRepo.save(new Food(null, "Cereal chicken meat porridge", "Cereal chicken meat porridge", 6d, false, 0, imageBasePath + "早餐/谷物鸡肉麦鲜粥.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Ham egg pancake", "Ham egg pancake", 11d, false, 0, imageBasePath + "早餐/火腿扒蛋麦煎饼.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Ham cheeseburger", "Ham cheeseburger", 17d, false, 0, imageBasePath + "早餐/火腿扒麦满分.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Egg cheeseburger", "Egg cheeseburger", 16d, false, 0, imageBasePath + "早餐/吉士蛋麦满分.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Bacon egg pancake", "Bacon egg pancake", 11d, false, 0, imageBasePath + "早餐/培根蛋麦煎饼.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Gold bun", "Gold bun", 5d, false, 0, imageBasePath + "早餐/金馒头.png", 1, branchGroup, category,null));
                     }
-                    if (category.getId() == 2) {//汉堡包
+                    if (category.getId().equals(2l) ) {//汉堡包
                         foodRepo.save(new Food(null, "Cheeseburger", "Cheeseburger", 8d, false, 0, imageBasePath + "/汉堡/吉士汉堡.png", 1, branchGroup, category,null));
                         foodRepo.save(new Food(null, "Big mac burger", "Big mac burger", 20d, false, 0, imageBasePath + "/汉堡/巨无霸汉堡.png", 1, branchGroup, category,null));
                         foodRepo.save(new Food(null, "Spicy chicken burger", "Spicy chicken burger", 17d, false, 0, imageBasePath + "/汉堡/麦辣鸡腿堡.png", 1, branchGroup, category,null));
                         foodRepo.save(new Food(null, "Fish burger", "Fish burger", 17d, false, 0, imageBasePath + "/汉堡/麦香鱼堡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Bacon beef burger", "Bacon beef burger", 21d, false, 0, imageBasePath + "/汉堡/培根蔬萃双层牛肉堡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Long chicken burger", "Long chicken burger", 20d, false, 0, imageBasePath + "/汉堡/香满嫩鸡加长堡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Origin chicken burger", "Origin chicken burger", 18d, false, 0, imageBasePath + "/汉堡/原味板烧鸡腿堡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Long cheese ham burger", "Long cheese ham burger", 19d, false, 0, imageBasePath + "/汉堡/芝士火腿加长堡.png", 1, branchGroup, category,null));
                     }
-                    if (category.getId() == 3) {//小食
-                        foodRepo.save(new Food(null, "Spicy chicken wings", "Spicy chicken wings", 11d, false, 0, imageBasePath + "/小食/麦辣鸡翅.png", 1, branchGroup, category,null));
-                        foodRepo.save(new Food(null, "French fries", "French fries", 11d, false, 0, imageBasePath + "/小食/薯条.png", 1, branchGroup, category,null));
+                    if (category.getId().equals(3l) ) {//小食
+                        foodRepo.save(new Food(null, "Spicy chicken wings", "Spicy chicken wings", 16d, false, 0, imageBasePath + "/小食/麦辣鸡翅.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Happy chicken", "Happy chicken", 15d, false, 0, imageBasePath + "/小食/麦乐鸡.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Big chicken", "Big chicken", 17d, false, 0, imageBasePath + "/小食/那么大鸡排.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "French fries", "French fries", 11d, false, 0, imageBasePath + "/小食/薯条.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Drumstick", "Drumstick", 13d, false, 0, imageBasePath + "/小食/香骨鸡腿.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Corn cup", "Corn cup", 12d, false, 0, imageBasePath + "/小食/玉米杯.png", 1, branchGroup, category,null));
                     }
+                    if(category.getId().equals(4l)){//甜品
+                        foodRepo.save(new Food(null, "McFlurry Oreo", "McFlurry Oreo", 12d, false, 0, imageBasePath + "/甜品/奥利奥麦旋风.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "McFlurry Strawberry", "McFlurry Strawberry", 12d, false, 0, imageBasePath + "/甜品/草莓奥利奥麦旋风.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Pineapple Pie", "Pineapple Pie", 7d, false, 0, imageBasePath + "/甜品/菠萝派.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Sundae Strawberry", "Sundae Strawberry", 9d, false, 0, imageBasePath + "/甜品/草莓新地.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Double Ice Cream Cone", "Double Ice Cream Cone", 6d, false, 0, imageBasePath + "/甜品/双旋圆筒冰淇淋.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Taro Pie", "Taro Pie", 7d, false, 0, imageBasePath + "/甜品/香芋派.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Ice Cream Cone", "Ice Cream Cone", 4d, false, 0, imageBasePath + "/甜品/圆筒冰淇淋.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Sundae Chocolate", "Sundae Chocolate", 9d, false, 0, imageBasePath + "/甜品/朱古力新地.png", 1, branchGroup, category,null));
+                    }
+                    if(category.getId().equals(5l)){//饮料
+                        foodRepo.save(new Food(null, "Ice dew water", "Ice dew water", 6.5d, false, 0, imageBasePath + "/饮料/冰露矿泉水.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Strawberry cool", "Strawberry cool", 6d, false, 0, imageBasePath + "/饮料/红莓缤纷酷.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Coca-Cola", "Coca-Cola", 7d, false, 0, imageBasePath + "/饮料/可口可乐.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Cola cool", "Cola cool", 6d, false, 0, imageBasePath + "/饮料/可乐麦乐酷.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Sunshine Orange Juice", "Sunshine Orange Juice", 11d, false, 0, imageBasePath + "/饮料/美汁源阳光橙.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Melon cool", "Melon cool", 8d, false, 0, imageBasePath + "/饮料/蜜瓜缤纷酷.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Mocha cool", "Mocha cool", 9d, false, 0, imageBasePath + "/饮料/摩卡缤纷酷.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Lemon black tea", "Lemon black tea", 9d, false, 0, imageBasePath + "/饮料/柠檬红茶味饮料.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Taro cool", "Taro cool", 8.5d, false, 0, imageBasePath + "/饮料/香芋缤纷酷.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Sprite cool", "Sprite cool", 7.5d, false, 0, imageBasePath + "/饮料/雪碧麦乐酷.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Soybean milk", "Soybean milk", 5.5d, false, 0, imageBasePath + "/饮料/优品豆浆.png", 1, branchGroup, category,null));
+                    }
+                    if(category.getId().equals(6l)){//咖啡
+                        foodRepo.save(new Food(null, "Icy mocha", "Soybean Milk", 19d, false, 0, imageBasePath + "/咖啡/冰摩卡.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Icy latte", "Icy latte", 19d, false, 0, imageBasePath + "/咖啡/冰拿铁.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Cappuccino", "Cappuccino", 17d, false, 0, imageBasePath + "/咖啡/卡布奇诺.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "American style coffee", "American style coffee", 15d, false, 0, imageBasePath + "/咖啡/美式经典咖啡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "mocha", "mocha", 19d, false, 0, imageBasePath + "/咖啡/摩卡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "latte", "latte", 19d, false, 0, imageBasePath + "/咖啡/拿铁.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Espresso", "Espresso", 20d, false, 0, imageBasePath + "/咖啡/浓缩咖啡.png", 1, branchGroup, category,null));
+//                        foodRepo.save(new Food(null, "Milk coffee", "Milk coffee", 21d, false, 0, imageBasePath + "/咖啡/特浓香奶咖啡.png", 1, branchGroup, category,null));
+                    }    
                 })
         );
     }

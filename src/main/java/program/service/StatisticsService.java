@@ -99,7 +99,7 @@ public class StatisticsService {
         return resultList;
     }
     public List<StringAndNumber> getDateAndFoodCountListByBranchGroupAndFoodName(BranchGroup branchGroup, String foodName){
-            Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(createTime,'%Y/%c/%d')  ,sum(count)   FROM `foodinstance` where branchGroup_id=:branchGroupId and name like :name group by DATE_FORMAT(createTime,'%Y/%c/%d') ");
+            Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(createTime,'%Y/%c/%d')  ,sum(count)  FROM `foodinstance` where branchGroup_id=:branchGroupId and name like :name group by DATE_FORMAT(createTime,'%Y/%c/%d') ");
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndNumber.class));
         nativeQuery.setParameter("branchGroupId",branchGroup.getId());
         nativeQuery.setParameter("name",foodName);

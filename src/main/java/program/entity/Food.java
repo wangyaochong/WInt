@@ -16,7 +16,6 @@ public class Food {
     @GenericGenerator(name="generator",strategy = "org.hibernate.id.UUIDGenerator")
     @GeneratedValue(generator = "generator")
     String id;//数据id
-
     String name;//食品名称
     String description;//食品描述
     Double price;//产品价格
@@ -28,5 +27,5 @@ public class Food {
     BranchGroup branchGroup;//该食品所处在的分支
     @ManyToOne(fetch = FetchType.EAGER)
     Category category;//该产品所属类别
-    Integer monthlySellCount;
+    Long monthlySellNumber;
 }

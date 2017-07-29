@@ -1,6 +1,16 @@
 div(ng-controller='foodList')
-    .panel(class='panel-default')
+    #accordion.panel-group(role='tablist', aria-multiselectable='true')
+        .panel.panel-default
+            #headingOne.panel-heading(role='tab')
+                h3.panel-title
+                    a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='true', aria-controls='collapseOne')
+                        | Package Discount
+            #collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='headingOne')
+                .panel-body
+                    | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
 
+
+    .panel(class='panel-default')
         .panel-heading.clearfix
             div
                 h3(style="display:inline-block") Shopping Cart
@@ -30,6 +40,37 @@ div(ng-controller='foodList')
                 input.form-control.inline-block(placeholder="search name here..." style="width:200px" ng-model="foodName")
                 button.btn.btn-danger.pull-right(ng-click="clearSearch()") Clear
 
+            div.inline-block(style="width:20px;height:5px")
+            //    排序功能
+            .btn-group.btn-flat
+                button.btn.btn-primary.disabled Order By
+                button.btn.btn-default(ng-click="changeDirection('sellNumberOrder')")
+                    span Sell Number
+                    span.glyphicon.glyphicon-arrow-up(ng-if="sellNumberOrder=='asc'")
+                    span.glyphicon.glyphicon-arrow-down(ng-if="sellNumberOrder=='desc'")
+                    span.glyphicon.glyphicon-option-horizontal(ng-if="sellNumberOrder==''")
+                button.btn.btn-default(ng-click="changeDirection('discountOrder')")
+                    span Discount
+                    span.glyphicon.glyphicon-arrow-up(ng-if="discountOrder=='asc'")
+                    span.glyphicon.glyphicon-arrow-down(ng-if="discountOrder=='desc'")
+                    span.glyphicon.glyphicon-option-horizontal(ng-if="discountOrder==''")
+                button.btn.btn-default(ng-click="changeDirection('priceOrder')")
+                    span Price
+                    span.glyphicon.glyphicon-arrow-up(ng-if="priceOrder=='asc'")
+                    span.glyphicon.glyphicon-arrow-down(ng-if="priceOrder=='desc'")
+                    span.glyphicon.glyphicon-option-horizontal(ng-if="priceOrder==''")
+                button.btn.btn-danger(ng-click="initOrder()") Clear
+
+            div.inline-block(style="width:20px;height:5px")
+            //    是否显示可用
+            .btn-group.btn-flat
+                button.btn.btn-primary.disabled Select
+                button.btn.btn-default(ng-class="{'active':suspendedOption=='true'}" ng-click="suspendedOption='true'")
+                    span Only Suspended
+                button.btn.btn-default(ng-class="{'active':suspendedOption=='false'}" ng-click="suspendedOption='false'")
+                    span Only Available
+                button.btn.btn-danger(ng-click="suspendedOption='' ")  Clear
+
 
         .panel-body(style="padding-top:10px")
             div(class='col-xs-2 col-sm-2 col-md-2 col-lg-2' ng-repeat="f in foods track by $index" ng-class="{'bg-danger':f.isSuspended==false}" style="border:2px solid white"  )
@@ -37,6 +78,10 @@ div(ng-controller='foodList')
                     img(alt='' ng-src="{{f.imagePath}}" style="height:150px")
                     .caption
                         h4 {{f.name}}
+                        p
+                            span Information：
+                            span.red-text(title="{{f.description}}") {{f.description.substring(0,20)}}...
+
                         div.inline-block
                             p.inline-block(ng-class="{'discard-text':f.discountPercent!=0}")
                                 span Price：
@@ -47,11 +92,16 @@ div(ng-controller='foodList')
                                 span.red-text {{f.price*(100-f.discountPercent)/100}}
                                 span /RMB
                         p
+                            span Monthly Sell：
+                            span.red-text {{f.monthlySellNumber}}
+                        p
                             span Discount：
                             span.red-text {{f.discountPercent}}
                             span %
                             a.btn.btn-primary.pull-right(ng-click="setFood(f)") edit
-                            a.btn.btn-danger.pull-right(ng-click="addToOrderFoodList(f)" ng-disabled="f.isSuspended==true") add to order
+                            a.btn.btn-danger.pull-right(ng-if="f.isSuspended==true" ng-disabled="f.isSuspended==true") add to order
+                            a.btn.btn-danger.pull-right(ng-if="f.isSuspended!=true" ng-click="addToOrderFoodList(f)") add to order
+
         .panel-footer
             ul.pagination
                 li(ng-if="foodsData.number!=0" )

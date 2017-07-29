@@ -2,7 +2,7 @@ app.controller("statistics",function ($scope,crud) {
     $scope.figureOption=[
         "Order Number",//0
         "Order Cash Amount",//1
-        "Food Selling Count",//2
+        "Food Selling Cash",//2
         "Food Selling Trend"//3
     ]
     $scope.timeCycleOption=[
@@ -13,7 +13,6 @@ app.controller("statistics",function ($scope,crud) {
     $scope.currentTimeCycle="One Month";
     $scope.branchGroupFoodSellingCash=crud.getQueryResult("Statistics/branchGroupFoodSellingCashByDayCount?dayCount=1").data;
     $scope.branchGroupFoodSellingCountList=crud.getQueryResult("Statistics/allBranchGroupFoodCountList").data;
-
     $scope.currentFigureOption="Order Number";
     var myChart = echarts.init(document.getElementById('main'));
     var data = crud.getQueryResult("Statistics/branchGroupDateAndOrderNumberCountList").data;
@@ -30,8 +29,6 @@ app.controller("statistics",function ($scope,crud) {
             if($scope.timeCycleOption[2]==newVal[1]){
                 dayCount=30;
             }
-
-
             if($scope.figureOption[0]==newVal[0]){
                 var data = crud.getQueryResult("Statistics/branchGroupDateAndOrderNumberCountList").data;
                 data.forEach(function (one) {
@@ -83,9 +80,6 @@ function initAllBranchFoodSellingTrend($scope) {
         var myChart=echarts.init(document.getElementById(one.branchGroup.name));
         myChart.setOption(initLineWithFoodName(one,"Food Selling Trend in "+ one.branchGroup.name),true);
     })
-}
-var legend={
-
 }
 
 function initPie(data,titleText) {

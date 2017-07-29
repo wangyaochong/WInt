@@ -11,6 +11,9 @@
             .form-group
                 label isSuspended
                 select.form-control(ng-options='x for x in suspendedOption' ng-model="food.isSuspended")
+            .form-group
+                label(for='Information') Information
+                input.form-control( name='Information', id='Information', placeholder='Input...' ng-model="food.description")
     .modal-footer
         button.btn.btn-default(type='button', ng-click="closeModal()") Close
         button.btn.btn-primary(type='button' ng-click="clickYes()") Yes

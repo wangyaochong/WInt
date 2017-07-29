@@ -5,6 +5,30 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
     $scope.foodCategory = "";
     $scope.foodName = "";
     $scope.foodBranchGroup = ""
+    $scope.priceOrder="";
+    $scope.sellNumberOrder="";
+    $scope.discountOrder="";
+    $scope.suspendedOption="";
+    $scope.changeDirection=function (prop) {
+        if($scope[prop]==""){//如果点击了另一个排序
+            $scope.initOrder();
+        }
+        $scope[prop]=$scope.getNextOrderDirection($scope[prop]);
+    }
+    $scope.initOrder=function () {
+        $scope.priceOrder="";
+        $scope.sellNumberOrder="";
+        $scope.discountOrder="";
+    }
+    $scope.getNextOrderDirection=function(currentDirection){
+        if(currentDirection=="desc"){
+            return "asc";
+        }
+        if(currentDirection=="asc"){
+            return "desc";
+        }
+         return "desc";;
+    }
     if ($rootScope.currentUser != null) {
         $scope.foodBranchGroup = $rootScope.currentUser.branchGroup.id;
     }
@@ -20,10 +44,30 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
             }
         },food);
     }
-    $scope.$watchGroup(["foodCategory", "foodName"], function (newValues, oldValue) {
+    $scope.$watchGroup(["foodCategory", "foodName","priceOrder","sellNumberOrder","discountOrder","suspendedOption"], function (newValues, oldValue) {
         $scope.reloadFoodList($scope.foodsData.number+1);
     })
     $scope.reloadFoodList = function (pageNumber) {
+        var orderBy="";
+        var orderAsc=false;
+        if($scope.priceOrder!=""){
+            orderBy="price";
+            orderAsc=$scope.priceOrder=="asc"?true:false;
+        }
+        if($scope.sellNumberOrder!=""){
+            orderBy="monthlySellNumber";
+            orderAsc=$scope.sellNumberOrder=="asc"?true:false;
+        }
+        if($scope.discountOrder!=""){
+            orderBy="discountPercent";
+            orderAsc=$scope.discountOrder=="asc"?true:false;
+        }
+        var isSuspended=null;
+        if($scope.suspendedOption=="true"){
+            isSuspended=true;
+        }else if($scope.suspendedOption=='false'){
+            isSuspended=false;
+        }
         $scope.foodsData = $rootScope.queryPageFood({
             condition: {
                 name: $scope.foodName,
@@ -32,8 +76,11 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
                 },
                 branchGroup: {
                     id: $scope.foodBranchGroup
-                }
-            }, pageNum: pageNumber-1, pageSize: 12
+                },
+                isSuspended:isSuspended
+            }, pageNum: pageNumber-1, pageSize: 12,
+            orderBy:orderBy==""?null:orderBy,
+            orderAsc:orderBy==""?null:orderAsc
         }).data;
         $scope.foods = $scope.foodsData.content;
         $scope.pageNumbers=[];
