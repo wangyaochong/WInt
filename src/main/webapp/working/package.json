@@ -14,6 +14,7 @@
     "angular-ui-router": "^0.3.2",
     "autosize": "^3.0.20",
     "browser-sync": "^2.18.12",
+    "echarts": "^3.6.2",
     "galleria": "^1.5.1",
     "gulp": "*",
     "gulp-concat": "*",

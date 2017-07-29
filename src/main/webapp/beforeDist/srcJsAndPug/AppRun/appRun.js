@@ -52,6 +52,7 @@ app.run(function ($rootScope,crud) {
     $rootScope.categoriesFunc()
     $rootScope.branchGroupsFunc();
 })
+
 function initGetMethod($rootScope, crud) {
     var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders"];
     var getMethod=crud.getRestResult;

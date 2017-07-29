@@ -15,8 +15,8 @@ import javax.annotation.Resource;
 public class GenericService<RepoType extends JpaSpecificationExecutor&JpaRepository, T> {
     RepoType repo;
     public Page<T> queryPage(T queryExample, Integer pageNum, Integer pageSize, String orderBy, Boolean OrderAsc){
-        Sort.Direction direction= Sort.Direction.DESC;//默认是降序
-        if(Boolean.TRUE.equals(OrderAsc)){//如果是升序
+        Sort.Direction direction= Sort.Direction.DESC;//default is order desc
+        if(Boolean.TRUE.equals(OrderAsc)){//if order asc
             direction=Sort.Direction.ASC;
         }
         if (ObjectUtil.checkAllFieldNullOrEmptyAndSetEmptyNull(queryExample)) {
@@ -26,13 +26,13 @@ public class GenericService<RepoType extends JpaSpecificationExecutor&JpaReposit
                 return repo.findAll(new PageRequest(pageNum,pageSize,direction,orderBy));
             }
         }
-        if(StringUtils.isNullOrEmpty(orderBy)){//如果不排序
+        if(StringUtils.isNullOrEmpty(orderBy)){//if not order
             return  repo.findAll(
                     Example.of(queryExample, ExampleMatcher.matching()
                             .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                             .withIgnoreCase()),
                     new PageRequest(pageNum, pageSize));
-        }else{//需要排序
+        }else{//if need order
             return repo.findAll( Example.of(queryExample,ExampleMatcher.matching()
                             .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                             .withIgnoreCase()),

@@ -18,7 +18,6 @@
         <!--文件大小最大为1000MB-->
         <property name="maxUploadSizePerFile" value="1048576000"></property>
     </bean>
-
     <!--<bean class="org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter"></bean>-->
     <bean class="org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration"></bean>
 
@@ -33,7 +32,7 @@
                 <constructor-arg value="utf-8"></constructor-arg>
             </bean>
         </mvc:message-converters>
-    </mvc:annotation-driven>
+    </mvc:annotation-driven >
 </beans>
 
 

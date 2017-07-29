@@ -94,7 +94,8 @@ var processPath = {
         // '../beforeDist/libJs/videojs-ie8.js',
 
 
-        '../beforeDist/libJs/lodash.js',
+        // '../beforeDist/libJs/lodash.js',
+        '../beforeDist/libJs/echarts.js',
         // '../beforeDist/libJs/xeditable.js',
         //侧边菜单插件
         // '../beforeDist/libJs/slideout.js',

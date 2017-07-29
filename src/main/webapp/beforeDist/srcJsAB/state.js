@@ -31,6 +31,10 @@ $stateProvider
         url:"/foodList",
         templateUrl:distHtmlControllerUrl+"foodList.html"
     })
+    .state("statistics",{
+        url:"/statistics",
+        templateUrl:distHtmlControllerUrl+"statistics.html"
+    })
     .state('component.customerNew',{
         url:'/customerNew',
         templateUrl:distHtmlControllerUrl+"customerNew.html"

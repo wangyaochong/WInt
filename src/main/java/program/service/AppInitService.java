@@ -39,16 +39,19 @@ public class AppInitService implements ServletContextAware {
     FoodInstanceService foodInstanceService;
     @Resource
     IFoodOrderRepo foodOrderRepo;
-    public static final String nameStoreWangFuJing = "Chain Store around Wang Fu Jing";
-    public static final String nameStoreDongSi = "Chain Store at Dong Si Street";
-    public static final String nameStoreYongHeGong = "Chain Store around Yong He Gong";
-    public static final String nameStoreTsingHua="Chain Store around Tsinghua University";
-    public static final String nameStoreXiDanJoyCity="Chain Store around Xi Dan Joy City";
-    public static final String nameStoreBeiJingRailStation="Chain Store around Bei Jing Rail Station";
-
-
+    public static final String nameStoreWangFuJing = "Wang Fu Jing Store";
+    public static final String nameStoreDongSi = "Dong Si Street Store";
+    public static final String nameStoreYongHeGong = "Yong He Gong Store";
+    public static final String nameStoreTianAnMen="Tian An Men Store";
+    public static final String nameStoreXiDanJoyCity="Xi Dan Joy City Store";
+    public static final String nameStoreBeiJingRailStation="Bei Jing Rail Station Store";
+    public static int currentFoodIndex=0;
+    public static final int foodDiscount =0;
+    static Long addSaveFoodEveryCount=1000l;
+    static Long currentCount=0l;
+    static Long addNum=1l;
     final String imageBasePath = "/WInt/dist/img/餐厅图片/";
-    final Integer totalOrderDay = 30;
+    final Integer totalOrderDay = 10;
 
 
     @Override
@@ -64,12 +67,35 @@ public class AppInitService implements ServletContextAware {
             initOrder();
         }
     }
-
-    public List<FoodInstance> randomCreateFoodInstanceFromFoodList(List<Food> foodList, Integer foodCount, Integer fluctuateCount) {
+    public Food getFishBurgerFromFoodList(List<Food> foodList){
+        for(int i=0;i<foodList.size();i++){
+            if(foodList.get(i).getName().equals("Fish burger")){
+                return foodList.get(i);
+            }
+        }
+        System.out.println("Fish burger not found");
+        return null;
+    }
+    public List<FoodInstance> randomCreateFoodInstanceFromFoodList(List<Food> foodList, Integer foodCount, Integer fluctuateCount,Date orderCreateDate) {
         ArrayList<FoodInstance> foodInstanceList = new ArrayList<>();
         Integer count = foodCount + fluctuateCount / 2 - RandomUtils.nextInt(0, fluctuateCount + 1);//最终选取的食品数量可能多可能少，有波动
+        Food fishBurgerFromFoodList = getFishBurgerFromFoodList(foodList);
         while (count > 0) {
-            foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(RandomUtils.nextInt(0, foodList.size())))));
+            if(currentCount.equals(addSaveFoodEveryCount)){
+                for(int i=0;i<addNum;i++){
+                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(fishBurgerFromFoodList,orderCreateDate)));//添加趋势增长的食品
+                }
+                currentCount=0l;
+                System.out.println("增加--->"+addNum+"--->条鱼汉堡的记录");
+                addNum+=1;
+            }else{
+                if(0==RandomUtils.nextInt(0,10)){
+                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(currentFoodIndex),orderCreateDate)));//选择权重更多的食品
+                }else{
+                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(RandomUtils.nextInt(0, foodList.size())),orderCreateDate)));
+                }
+            }
+            currentCount++;
             count--;
         }
         return foodInstanceList;
@@ -85,13 +111,13 @@ public class AppInitService implements ServletContextAware {
         BranchGroup branchToSet = branchGroupRepo.queryBranchGroupByName(storeName);
         List<Food> foodList = foodRepo.queryFoodsByBranchGroup(branchToSet);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -totalOrderDay);
+        calendar.add(Calendar.DATE, -totalOrderDay+1);
         Date orderCreateDate = calendar.getTime();
         Integer totalOrderCount = 0;
         for (int i = 0; i < totalOrderDay; i++) {
             Integer tempOrderCount = initOrderCountEveryDay + orderCountFluctuation / 2 - RandomUtils.nextInt(0, orderCountFluctuation + 1);
             while (tempOrderCount > 0) {
-                List<FoodInstance> foodInstanceList = randomCreateFoodInstanceFromFoodList(foodList, foodCountPerOrder, foodCountFluctuation);//每一个订单都是不同的食物列表
+                List<FoodInstance> foodInstanceList = randomCreateFoodInstanceFromFoodList(foodList, foodCountPerOrder, foodCountFluctuation,orderCreateDate);//每一个订单都是不同的食物列表
                 List<Employee> employees = employeeRepo.queryEmployeesByBranchGroupAndRole(branchToSet, EnumRole.CASHIER.toString());
                 Employee employee = employees.get(RandomUtils.nextInt(0, employees.size()));
                 FoodOrder foodOrder = new FoodOrder(null, null, employee, foodInstanceList, orderCreateDate, null, foodInstanceService.getTotalFoodListPrice(foodInstanceList), false, EnumOrderType.STORE.toString(), branchToSet);
@@ -104,12 +130,17 @@ public class AppInitService implements ServletContextAware {
             calendar.add(Calendar.DATE,1);
             orderCreateDate=calendar.getTime();
         }
+        currentFoodIndex++;
     }
 
     public void initOrder() {
-        initOneStoreOrder(nameStoreWangFuJing, 6, 4, 150, 1, 30);
-        initOneStoreOrder(nameStoreDongSi, 6, 4, 150, 0, 30);
-        initOneStoreOrder(nameStoreYongHeGong, 6, 4, 150, -1, 30);
+        Integer initOrderCount=150;
+        initOneStoreOrder(nameStoreWangFuJing, 6, 4, initOrderCount, 2, 30);
+        initOneStoreOrder(nameStoreDongSi, 6, 6, initOrderCount, 0, 30);
+        initOneStoreOrder(nameStoreXiDanJoyCity, 6, 2, initOrderCount, 0, 30);
+        initOneStoreOrder(nameStoreTianAnMen, 6, 4, initOrderCount, -1, 30);
+        initOneStoreOrder(nameStoreBeiJingRailStation, 6, 4, initOrderCount, 4, 30);
+        initOneStoreOrder(nameStoreYongHeGong, 6, 4, initOrderCount, -2, 30);
     }
 
     public void initProduct() {
@@ -141,20 +172,20 @@ public class AppInitService implements ServletContextAware {
         categoryRepo.findAll().stream().forEach(category ->
                 branchGroupRepo.findAll().stream().forEach(branchGroup -> {//也许食品会空行，但都是按照顺序来排列
                     if (category.getId() == 1) {//早餐
-                        foodRepo.save(new Food(null, "Crisp potato cake", "Crisp potato cake", 5d, false, 0, imageBasePath + "/早餐/脆薯饼.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "Crispy fritters", "Crispy fritters", 5.5d, false, 0, imageBasePath + "/早餐/脆香油条.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, " Crispy chicken with wheat", "Crispy chicken with grilled wheat", 8d, false, 0, imageBasePath + "/早餐/大脆鸡扒麦满分.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "Cereal chicken meat porridge", "Cereal chicken meat porridge", 6d, false, 0, imageBasePath + "早餐/谷物鸡肉麦鲜粥.png", 1, branchGroup, category));
+                        foodRepo.save(new Food(null, "Crisp potato cake", "Crisp potato cake", 5d, false, 0, imageBasePath + "/早餐/脆薯饼.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Crispy fritters", "Crispy fritters", 5.5d, false, 0, imageBasePath + "/早餐/脆香油条.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Crispy chicken with wheat", "Crispy chicken with grilled wheat", 8d, false, 0, imageBasePath + "/早餐/大脆鸡扒麦满分.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Cereal chicken meat porridge", "Cereal chicken meat porridge", 6d, false, 0, imageBasePath + "早餐/谷物鸡肉麦鲜粥.png", 1, branchGroup, category,null));
                     }
                     if (category.getId() == 2) {//汉堡包
-                        foodRepo.save(new Food(null, "Cheeseburger", "Cheeseburger", 8d, false, 0, imageBasePath + "/汉堡/吉士汉堡.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "Big mac burger", "Big mac burger", 20d, false, 0, imageBasePath + "/汉堡/巨无霸汉堡.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "Spicy chicken burger", "Spicy chicken burger", 17d, false, 0, imageBasePath + "/汉堡/麦辣鸡腿堡.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "Fish burger", "Fish burger", 17d, false, 0, imageBasePath + "/汉堡/麦香鱼堡.png", 1, branchGroup, category));
+                        foodRepo.save(new Food(null, "Cheeseburger", "Cheeseburger", 8d, false, 0, imageBasePath + "/汉堡/吉士汉堡.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Big mac burger", "Big mac burger", 20d, false, 0, imageBasePath + "/汉堡/巨无霸汉堡.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Spicy chicken burger", "Spicy chicken burger", 17d, false, 0, imageBasePath + "/汉堡/麦辣鸡腿堡.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Fish burger", "Fish burger", 17d, false, 0, imageBasePath + "/汉堡/麦香鱼堡.png", 1, branchGroup, category,null));
                     }
                     if (category.getId() == 3) {//小食
-                        foodRepo.save(new Food(null, "Spicy chicken wings", "Spicy chicken wings", 11d, false, 0, imageBasePath + "/小食/麦辣鸡翅.png", 1, branchGroup, category));
-                        foodRepo.save(new Food(null, "French fries", "French fries", 11d, false, 0, imageBasePath + "/小食/薯条.png", 1, branchGroup, category));
+                        foodRepo.save(new Food(null, "Spicy chicken wings", "Spicy chicken wings", 11d, false, 0, imageBasePath + "/小食/麦辣鸡翅.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "French fries", "French fries", 11d, false, 0, imageBasePath + "/小食/薯条.png", 1, branchGroup, category,null));
                     }
                 })
         );
@@ -203,12 +234,12 @@ public class AppInitService implements ServletContextAware {
 
     public void initBranchGroup() {
         if (ObjectUtils.isEmpty(branchGroupRepo.findAll())) {
-            branchGroupRepo.save(new BranchGroup(nameStoreDongSi, "store No.1", "海淀区花园路2号翠微大厦牡丹园店1楼(近牡丹园地铁站西北口)", new Date().getTime(), 100));
-            branchGroupRepo.save(new BranchGroup(nameStoreTsingHua, "store No.2", "北京市海淀区双清路30号", new Date().getTime(), 100));
-            branchGroupRepo.save(new BranchGroup(nameStoreWangFuJing, "store No.3", "王府井大街99号首层、地下一层", new Date().getTime(), 100));
-            branchGroupRepo.save(new BranchGroup(nameStoreYongHeGong, "store No.4", "雍和宫西南角翻建商业A区1层", new Date().getTime(), 100));
-            branchGroupRepo.save(new BranchGroup(nameStoreBeiJingRailStation, "store No.5", "北京市东城区北京火车站西街北京站站前广场西侧", new Date().getTime(), 100));
-            branchGroupRepo.save(new BranchGroup(nameStoreXiDanJoyCity, "store No.6", "北京市西城区西单横二条59号西单明珠商品市场地下1层", new Date().getTime(), 100));
+            branchGroupRepo.save(new BranchGroup(nameStoreDongSi, "store No.1", "海淀区花园路2号翠微大厦牡丹园店1楼(近牡丹园地铁站西北口)", new Date().getTime(), foodDiscount));
+            branchGroupRepo.save(new BranchGroup(nameStoreTianAnMen, "store No.2", "北京市海淀区双清路30号", new Date().getTime(), foodDiscount));
+            branchGroupRepo.save(new BranchGroup(nameStoreWangFuJing, "store No.3", "王府井大街99号首层、地下一层", new Date().getTime(), foodDiscount));
+            branchGroupRepo.save(new BranchGroup(nameStoreYongHeGong, "store No.4", "雍和宫西南角翻建商业A区1层", new Date().getTime(), foodDiscount));
+            branchGroupRepo.save(new BranchGroup(nameStoreBeiJingRailStation, "store No.5", "北京市东城区北京火车站西街北京站站前广场西侧", new Date().getTime(), foodDiscount));
+            branchGroupRepo.save(new BranchGroup(nameStoreXiDanJoyCity, "store No.6", "北京市西城区西单横二条59号西单明珠商品市场地下1层", new Date().getTime(), foodDiscount));
         }
     }
     public void initCustomer() {

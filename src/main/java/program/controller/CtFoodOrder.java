@@ -19,7 +19,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("FoodOrder")
-public class CtFoodOrders {
+public class CtFoodOrder {
     @Resource
     IFoodInstanceRepo foodInstanceRepo;
     @Resource
@@ -49,4 +49,5 @@ public class CtFoodOrders {
         responseInfo.setData(customers);
         return responseInfo;
     }
+
 }
