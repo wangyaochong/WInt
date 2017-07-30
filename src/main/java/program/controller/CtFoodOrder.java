@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 
 @RestController
-@RequestMapping("FoodOrder")
+@RequestMapping("/FoodOrder")
 public class CtFoodOrder {
     @Resource
     IFoodInstanceRepo foodInstanceRepo;

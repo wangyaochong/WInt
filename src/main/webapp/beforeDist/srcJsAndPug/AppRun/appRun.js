@@ -9,7 +9,7 @@ var datepickerInitTime=50;
 function nullIfUndefined(obj) {
     return obj==undefined?null:obj;
 }
-app.run(function ($rootScope,crud) {
+app.run(function ($rootScope,crud,$filter) {
      $rootScope.currentUser=crud.getQueryResult("LogInLogOut/currentUser").data;
 
 
@@ -39,7 +39,11 @@ app.run(function ($rootScope,crud) {
         return true;
     }
     $rootScope.getOneFoodPrice = function (food) {
-        return food.price * (100 - food.discountPercent) / 100 * food.count;
+        var price= food.price * (100 - food.discountPercent) / 100 * food.count;
+
+        var numberFilter=$filter("number")( price,2);
+        console.log("numberFilter",numberFilter)
+        return parseFloat(numberFilter);
     }
     $rootScope.getFoodListPrice = function (foodList) {
         var totalPrice = 0;
@@ -47,6 +51,7 @@ app.run(function ($rootScope,crud) {
             totalPrice += $rootScope.getOneFoodPrice(foodList[i]);
         }
         return totalPrice;
+        // return $filter("number")( totalPrice,2);
     }
 
     $rootScope.categoriesFunc()
@@ -54,7 +59,7 @@ app.run(function ($rootScope,crud) {
 })
 
 function initGetMethod($rootScope, crud) {
-    var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders"];
+    var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders","foodPackageDiscounts"];
     var getMethod=crud.getRestResult;
     apiUrlList.forEach(function (apiUrl) {
         $rootScope["get"+apiUrl]=function (id) {
@@ -63,7 +68,7 @@ function initGetMethod($rootScope, crud) {
     })
 }
 function initDeleteMethod($rootScope,crud) {
-    var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders"];
+    var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders","foodPackageDiscounts"];
     var deleteMethod=crud.deleteRestResult;
     apiUrlList.forEach(function (apiUrl) {
         $rootScope["delete"+apiUrl]=function (id) {
@@ -72,7 +77,7 @@ function initDeleteMethod($rootScope,crud) {
     })
 }
 function initQueryPageMethod($rootScope, crud) {
-    var apiUrlList=["Customer","Category","Product","BranchGroup","Employee","GlobalConfig","Food","FoodOrder"]
+    var apiUrlList=["Customer","Category","Product","BranchGroup","Employee","GlobalConfig","Food","FoodOrder","FoodPackageDiscount"]
 
     var queryPagePartUrl="/queryPage";
     var queryPageMethod=crud.postObjectResult;
@@ -87,7 +92,7 @@ function initQueryPageMethod($rootScope, crud) {
 function initSaveMethod($rootScope,crud) {
     var saveMethod=crud.postObjectResult;
     var savePartUrl="/save";
-    var apiUrlList=["Customer","Category","Product","BranchGroup","Employee","GlobalConfig","Food","FoodOrder"]
+    var apiUrlList=["Customer","Category","Product","BranchGroup","Employee","GlobalConfig","Food","FoodOrder","FoodPackageDiscount"]
     apiUrlList.forEach(function (apiUrl) {
         $rootScope["save"+apiUrl]=function (obj) {
             saveMethod(apiUrl + savePartUrl, obj);

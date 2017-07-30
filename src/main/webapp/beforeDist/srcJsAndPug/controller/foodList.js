@@ -1,10 +1,10 @@
-app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,foodSettingModal) {
+app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,foodSettingModal,$filter) {
     $scope.orderFoodList = [];
     $scope.categories = $rootScope.queryPageCategory({pageNum: 0, pageSize: singlePageSize}).data.content;
     $scope.foodsData = {};
     $scope.foodCategory = "";
     $scope.foodName = "";
-    $scope.foodBranchGroup = ""
+    $scope.foodBranchGroup = null;
     $scope.priceOrder="";
     $scope.sellNumberOrder="";
     $scope.discountOrder="";
@@ -32,6 +32,20 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
     if ($rootScope.currentUser != null) {
         $scope.foodBranchGroup = $rootScope.currentUser.branchGroup.id;
     }
+    $scope.foodPackageDiscounts=$rootScope.queryPageFoodPackageDiscount({
+        pageNum: 0, pageSize: singlePageSize,
+        condition:{
+            branchGroup:{
+                id: $scope.foodBranchGroup
+            }
+        }
+    }).data.content;
+    $scope.foodPackageDiscounts.forEach(function (p) {
+        p.foodList.forEach(function (f) {
+            f.isPackage=true;
+            f.discountPercent=p.discount;
+        })
+    })
     $scope.setFood=function (food) {
         foodSettingModal.showModal(function () {
             var id=food.id;
@@ -98,6 +112,8 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
     }
     $scope.createNewOrder = function () {
         orderStoreNewModal.showModal(function(data){
+
+
             $rootScope.saveFoodOrder(data);
         },$scope.orderFoodList);
     }
@@ -108,18 +124,24 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
         $scope.orderFoodList = [];
     }
 
-    $scope.removeFromOrderFoodList = function (o) {
-        for (var i = 0; i < $scope.orderFoodList.length; i++) {
-            if (o.id == $scope.orderFoodList[i].id) {
-                if ($scope.orderFoodList[i].count == 1) {
-                    $scope.orderFoodList.splice(i, 1);
-                } else {
-                    $scope.orderFoodList[i].count--;
-                }
-            }
+    $scope.removeFromOrderFoodList = function (index) {
+        if($scope.orderFoodList[index].isPackage==true){//如果是折扣打包，就直接移除
+            $scope.orderFoodList.splice(index, 1);
+            return ;
+        }
+        if ($scope.orderFoodList[index].count == 1) {
+            $scope.orderFoodList.splice(index, 1);
+        } else {
+            $scope.orderFoodList[index].count--;
         }
     }
     $scope.addToOrderFoodList = function (o) {
+        if(o.isPackage==true){//如果是折扣打包，就直接添加
+            var t={};
+            angular.copy(o,t);
+            $scope.orderFoodList.push(t);
+            return ;
+        }
         for (var i = 0; i < $scope.orderFoodList.length; i++) {
             if (o.id == $scope.orderFoodList[i].id) {
                 $scope.orderFoodList[i].count++;
@@ -127,6 +149,13 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
             }
         }
         $scope.orderFoodList.push(o);
+    }
+    $scope.addPackageToOrderFoodList=function (package) {
+        package.foodList.forEach(function (food) {
+            var tmp={};
+            angular.copy(food,tmp);
+            $scope.orderFoodList.push(tmp);
+        })
     }
     $scope.reloadFoodList(1);
 })

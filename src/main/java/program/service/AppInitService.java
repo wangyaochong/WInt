@@ -39,6 +39,8 @@ public class AppInitService implements ServletContextAware {
     IFoodOrderRepo foodOrderRepo;
     @Resource
     FoodInstanceService foodInstanceService;
+    @Resource
+    IFoodPackageDiscountRepo foodPackageDiscountRepo;
 
     public static final String nameStoreWangFuJing = "Wang Fu Jing Store";
     public static final String nameStoreDongSi = "Dong Si Street Store";
@@ -67,6 +69,7 @@ public class AppInitService implements ServletContextAware {
             initProduct();
             initOrder();
             initFoodMonthlySellNumber();
+            initPackageDiscount();
         }
     }
     public Food getFishBurgerFromFoodList(List<Food> foodList){
@@ -78,12 +81,7 @@ public class AppInitService implements ServletContextAware {
         System.out.println("Fish burger not found");
         return null;
     }
-    public void initPackageDiscount(){
-        branchGroupRepo.findAll().forEach(branchGroup ->{
-            List<Food> foods = foodRepo.queryFoodsByBranchGroup(branchGroup);
-        });
 
-    }
 
     public List<FoodInstance> randomCreateFoodInstanceFromFoodList(List<Food> foodList, Integer foodCount, Integer fluctuateCount,Date orderCreateDate) {
         ArrayList<FoodInstance> foodInstanceList = new ArrayList<>();
@@ -183,6 +181,31 @@ public class AppInitService implements ServletContextAware {
             });
         });
     }
+    public void initPackageDiscount(){
+        branchGroupRepo.findAll().forEach(branchGroup ->{
+            List<Food> foods = foodRepo.queryFoodsByBranchGroup(branchGroup);
+            List<Food> foodListForOnePerson=new ArrayList<>();
+            List<Food> foodListForTwoPerson=new ArrayList<>();
+            for (Food food : foods) {
+                if(food.getName().equals("Cola cool")){
+                    foodListForOnePerson.add(food);
+                    foodListForTwoPerson.add(food);
+                }
+                if(food.getName().equals("Sprite cool")){
+                    foodListForTwoPerson.add(food);
+                }
+                if(food.getName().equals("Cheeseburger")){
+                    foodListForOnePerson.add(food);
+                    foodListForTwoPerson.add(food);
+                }
+                if(food.getName().equals("Fish burger")){
+                    foodListForTwoPerson.add(food);
+                }
+            }
+            foodPackageDiscountRepo.save(new FoodPackageDiscount(null,"One person package","One person package",10,false,foodListForOnePerson,branchGroup));
+            foodPackageDiscountRepo.save(new FoodPackageDiscount(null,"Two person package","Two person package",13,false,foodListForTwoPerson,branchGroup));
+        });
+    }
     public void initFood() {
         categoryRepo.findAll().stream().forEach(category ->
                 branchGroupRepo.findAll().stream().forEach(branchGroup -> {//也许食品会空行，但都是按照顺序来排列
@@ -235,7 +258,7 @@ public class AppInitService implements ServletContextAware {
 //                        foodRepo.save(new Food(null, "Mocha cool", "Mocha cool", 9d, false, 0, imageBasePath + "/饮料/摩卡缤纷酷.png", 1, branchGroup, category,null));
 //                        foodRepo.save(new Food(null, "Lemon black tea", "Lemon black tea", 9d, false, 0, imageBasePath + "/饮料/柠檬红茶味饮料.png", 1, branchGroup, category,null));
 //                        foodRepo.save(new Food(null, "Taro cool", "Taro cool", 8.5d, false, 0, imageBasePath + "/饮料/香芋缤纷酷.png", 1, branchGroup, category,null));
-//                        foodRepo.save(new Food(null, "Sprite cool", "Sprite cool", 7.5d, false, 0, imageBasePath + "/饮料/雪碧麦乐酷.png", 1, branchGroup, category,null));
+                        foodRepo.save(new Food(null, "Sprite cool", "Sprite cool", 7.5d, false, 0, imageBasePath + "/饮料/雪碧麦乐酷.png", 1, branchGroup, category,null));
 //                        foodRepo.save(new Food(null, "Soybean milk", "Soybean milk", 5.5d, false, 0, imageBasePath + "/饮料/优品豆浆.png", 1, branchGroup, category,null));
                     }
                     if(category.getId().equals(6l)){//咖啡
@@ -247,7 +270,7 @@ public class AppInitService implements ServletContextAware {
 //                        foodRepo.save(new Food(null, "latte", "latte", 19d, false, 0, imageBasePath + "/咖啡/拿铁.png", 1, branchGroup, category,null));
 //                        foodRepo.save(new Food(null, "Espresso", "Espresso", 20d, false, 0, imageBasePath + "/咖啡/浓缩咖啡.png", 1, branchGroup, category,null));
 //                        foodRepo.save(new Food(null, "Milk coffee", "Milk coffee", 21d, false, 0, imageBasePath + "/咖啡/特浓香奶咖啡.png", 1, branchGroup, category,null));
-                    }    
+                    }
                 })
         );
     }

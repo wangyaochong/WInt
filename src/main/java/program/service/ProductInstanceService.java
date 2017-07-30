@@ -10,6 +10,6 @@ public class ProductInstanceService extends GenericService<IProductInstanceRepo,
     @Autowired
     public ProductInstanceService(IProductInstanceRepo repo){
         this.setRepo(repo);
-        System.out.println("set FoodOrderService in init "+repo.getClass());
+        System.out.println("set ProductInstanceService in init "+repo.getClass());
     }
 }

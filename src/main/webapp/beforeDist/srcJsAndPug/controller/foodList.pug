@@ -6,9 +6,16 @@ div(ng-controller='foodList')
                     a(role='button', data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='true', aria-controls='collapseOne')
                         | Package Discount
             #collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='headingOne')
-                .panel-body
-                    | Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-
+                .panel-body.clearfix
+                    div.clearfix(ng-repeat="one in foodPackageDiscounts track by $index" style="display:block")
+                        a.btn.btn-danger.pull-right(ng-if="one.isSuspended==true" ng-disabled="one.isSuspended==true") add to order
+                        a.btn.btn-danger.pull-right(ng-if="one.isSuspended!=true" ng-click="addPackageToOrderFoodList(one)") add to order
+                        div(style="width:100px;float:left;display:inline-block"  ng-repeat="of in one.foodList")
+                            .thumbnail
+                                span.label.label-danger {{getOneFoodPrice(of)}}
+                                span.label.label-primary {{one.discount}}%
+                                img(alt='' ng-src="{{of.imagePath}}" style="height:100px")
+                                span {{of.name}}
 
     .panel(class='panel-default')
         .panel-heading.clearfix
@@ -16,7 +23,7 @@ div(ng-controller='foodList')
                 h3(style="display:inline-block") Shopping Cart
                 //button.btn.btn-primary.pull-right(type='button' ng-click="createNewOrder()" ng-disabled="orderFoodList.length==0") Create Order
                 button.btn.btn-primary.pull-right(type='button' ng-click="createNewOrder()" ) Create Order
-                button.btn.btn-danger.pull-right total：{{getFoodListPrice(orderFoodList)}}/RMB
+                button.btn.btn-danger.pull-right total：{{getFoodListPrice(orderFoodList) | number : 2}}/RMB
 
             legend
             h5.inline-block(ng-if="orderFoodList.length==0") Please Order Food...
@@ -25,7 +32,7 @@ div(ng-controller='foodList')
                 .thumbnail
                     span.label.label-danger {{getOneFoodPrice(o)}}
                     span.label.label-primary {{o.count}}
-                    a(href="" ng-click="removeFromOrderFoodList(o)")
+                    a(href="" ng-click="removeFromOrderFoodList($index)")
                         span.glyphicon.glyphicon-remove.pull-right
                     img(alt='' ng-src="{{o.imagePath}}" style="height:100px")
                     span {{o.name}}
