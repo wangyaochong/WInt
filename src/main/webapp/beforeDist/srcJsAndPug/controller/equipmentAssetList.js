@@ -1,9 +1,6 @@
-app.controller('branchGroupList',function ($scope,NgTableParams,$rootScope,branchGroupNewModal) {
-    $scope.addNewBranchGroup=function (id) {
-        branchGroupNewModal.showModal(function (data) {
-            $rootScope.saveBranchGroup(data);
-            $scope.customerListTableParams.reload();
-        },id);
+app.controller('equipmentAssetList',function ($scope,NgTableParams,$rootScope,branchGroupNewModal,toaster) {
+    $scope.sendRepairMessage=function () {
+        toaster.pop("info","repair request sent","repair request sent");
     }
     $scope.customerListTableParams = new NgTableParams({count: 10}, {
         counts: [],//代表用户不可以切换每页显示的数量
@@ -23,12 +20,14 @@ app.controller('branchGroupList',function ($scope,NgTableParams,$rootScope,branc
             var queryPageObject={
                 condition:{
                     // id:filter.id==undefined?null:filter.id,
-
                     name:filter.name==undefined?null:filter.name,
                     description:filter.description==undefined?null:filter.description,
                     address:filter.address==undefined?null:filter.address,
                     // age:filter.age==undefined?null:filter.age,
                     // gender:filter.gender==undefined?null:filter.gender
+                    branchGroup: {
+                        id: $scope.foodBranchGroup
+                    },
                 },
                 pageNum:params.page()-1,
                 pageSize:params.count()
@@ -37,15 +36,8 @@ app.controller('branchGroupList',function ($scope,NgTableParams,$rootScope,branc
                 queryPageObject.orderBy=Object.keys(sorting)[0];
                 queryPageObject.orderAsc=  (orderBy[0][0]=='+'?true:false);
             }
-
-
-
-            var queryPageBranchGroup = $rootScope.queryPageBranchGroup(queryPageObject);
+            var queryPageBranchGroup = $rootScope.queryPageEquipmentAsset(queryPageObject);
             console.log(queryPageBranchGroup);
-            queryPageBranchGroup.data.content.forEach(function (one) {
-                one.staffNumber=12;
-                one.monthlyProfit=34567;
-            })
             params.total(queryPageBranchGroup.data.totalElements);
             return queryPageBranchGroup.data.content;
 

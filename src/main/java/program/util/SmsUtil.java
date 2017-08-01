@@ -31,7 +31,7 @@ public class SmsUtil {
     private static final String MOBILE="[17600401248]";
     //验证码长度，范围4～10，默认为4
     private static final String CODELEN="6";
-    public static void sendMessage(String msg){
+    public static String sendMessage(String msg){
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(SERVER_URL);
         String curTime = String.valueOf((new Date()).getTime() / 1000L);
@@ -74,8 +74,10 @@ public class SmsUtil {
          */
         try {
             System.out.println(EntityUtils.toString(response.getEntity(), "utf-8"));
+            return EntityUtils.toString(response.getEntity());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "failed";
     }
 }

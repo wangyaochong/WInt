@@ -16,7 +16,9 @@ app.service("productNewModal",function ($uibModal,$rootScope) {
                 }
                 if(obj!=undefined){
                     $scope.isEditing=true;
+
                     $scope.product=obj;
+
                     $scope.product.createDate=new Date($scope.product.createDate);
                 }
 

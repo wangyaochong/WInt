@@ -11,20 +11,27 @@ div(ng-controller='productList')
 
         .panel-body
             div
-                h3(style="display:inline-block")  Supplies   
+                h3(style="display:inline-block")  Supplies
                 button.btn.btn-default.pull-right(type='button' ng-click="addNewProduct()") add by file
                 button.btn.btn-default.pull-right(type='button' ng-click="addNewProduct()") add
-
+                button.btn.btn-default.pull-right(type='button' ng-click="startProductSimulation()") simulation
+                button.btn.btn-default.pull-right(type='button' ng-click="idealProductManage()") export purchasing List
+                button.btn.btn-default.pull-right(type='button' ng-click="idealProductManage()") ideal management
             table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" autocomplete="off" )
                 tbody
                     tr(ng-repeat="item in $data")
                         td(ng-cloak="" title=" 'image' ")
                             img(alt='' ng-src="{{item.imagePath}}" style="height:100px")
                         td(ng-cloak="" title=" 'name' ", sortable=" 'name' "  filter="{name:'text'}" ) {{item.name}}
-                        td(ng-cloak="" title=" 'available amount' "   sortable=" 'count' "   filter=" {count:'text'} ") {{item.count}}
+                        td(ng-cloak="" title=" 'available amount' "   sortable=" 'count' "   filter=" {count:'text'} ")
+                            span.label.label-danger {{item.countToAlarm}}
+                            span.label.label-primary {{item.count}}
+                        td(ng-cloak="" title=" 'days to sustain' "  sortable=" 'badDate' "   filter=" {badDate:'text'} " )
+                            span.label.label-danger {{item.daysLeftToAlarm}}
+                            span.label.label-primary {{item.predictedConsumingDays| number:2}}
+                        td(ng-cloak="" title=" 'need to purchase' "   sortable=" 'count' "   filter=" {count:'text'} ") {{getNeedToPurchaseCount(item)}}
                         td(ng-cloak="" title=" 'production date' "   sortable=" 'productionDate' "   filter=" {productionDate:'text'} ") {{item.productionDate|date:"yyyy-MM-dd"}}
                         td(ng-cloak="" title=" 'bad date' "   sortable=" 'badDate' "   filter=" {badDate:'text'} ") {{item.badDate|date:"yyyy-MM-dd"}}
-                        td(ng-cloak="" title=" 'days to sustain' "  sortable=" 'badDate' "   filter=" {badDate:'text'} " ) {{item.predictedConsumingDays| number:2}}
                         td(ng-cloak="" title=" 'operation' ")
                             .btn-group.pull-right
                                 button.btn.btn-default(type='button' ng-click="addNewProduct(item);customerListTableParams.reload() ") edit

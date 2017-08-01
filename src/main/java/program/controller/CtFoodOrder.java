@@ -20,12 +20,21 @@ import java.util.Date;
 @RestController
 @RequestMapping("/FoodOrder")
 public class CtFoodOrder {
+    public static boolean simulationStarted=false;
+
+
     @Resource
     IFoodInstanceRepo foodInstanceRepo;
     @Resource
     IFoodOrderRepo foodOrderRepo;
     @Resource
     FoodOrderService foodOrderService;
+    @RequestMapping("/startSimulation")
+    public ResponseInfo startSimulation(){
+        simulationStarted=true;
+        return new ResponseInfo();
+    }
+
     @RequestMapping("/save")
     public ResponseInfo save(@RequestBody FoodOrder obj){
         if(ObjectUtils.isEmpty(obj.getId())){//如果是空的，则说明是新增订单而不是修改订单状态

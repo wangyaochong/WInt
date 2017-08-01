@@ -15,8 +15,8 @@ div(ng-controller='foodList')
                     h5.inline-block(ng-if="orderFoodList.length==0") Please Order Food...
                     button.btn.btn-danger.pull-right(ng-click="clearCart()" style="margin-down:10px") Clear Cart
                 div.clearfix.pull-right.pre-scrollable(style="padding-top:10px;max-height:650px;")
-                    div(style="width:97px;float:left;display:inline-block" ng-repeat="o in orderFoodList track by $index")
-                        .thumbnail
+                    div(style="width:97px;float:left;display:inline-block;" ng-repeat="o in orderFoodList track by $index")
+                        .thumbnail(style="height:180px")
                             span.label.label-danger {{getOneFoodPrice(o)}}
                             span.label.label-primary {{o.count}}
                             a(href="" ng-click="removeFromOrderFoodList($index)")
@@ -25,8 +25,6 @@ div(ng-controller='foodList')
                             span {{o.name}}
 
     .col-xs-9.col-sm-9.col-md-9.col-lg-9
-
-
         #accordion.panel-group(role='tablist', aria-multiselectable='true')
             .panel.panel-default
                 #headingOne.panel-heading(role='tab')
@@ -101,7 +99,7 @@ div(ng-controller='foodList')
 
                 div.inline-block(style="width:20px;height:5px")
                 //    是否显示可用
-                .btn-group.btn-flat
+                //.btn-group.btn-flat
                     button.btn.btn-primary.disabled Select
                     button.btn.btn-default(ng-class="{'active':suspendedOption=='true'}" ng-click="suspendedOption='true'")
                         span Only Suspended

@@ -1,19 +1,36 @@
-app.controller('orderList',function ($scope,$rootScope,customerNewModal,NgTableParams,$timeout,toaster) {
+app.controller('orderList',function ($scope,$rootScope,customerNewModal,NgTableParams,$timeout,toaster,crud) {
     var intervalId=null;
     // $scope.orders=$rootScope.queryPageFoodOrder({pageNum: 0, pageSize: 15}).data.content;
-    $scope.needAutoUpdate=false;
+
+    $scope.simulateOrder=function () {
+        crud.getQueryResult("FoodOrder/startSimulation");
+    }
     $timeout(function () {
         $("#needAutoUpdate").bootstrapSwitch();
+        $("#needAutoUpdate").bootstrapSwitch('state',$rootScope.needAutoUpdate);
+        if($rootScope.needAutoUpdate==true){
+            intervalId=setInterval(function () {
+                $scope.$apply(function () {
+                    $scope.reloadOrderList();
+                })
+            },1000)
+        }
         $('#needAutoUpdate').on('switchChange.bootstrapSwitch', function (e, data) {
             var newVal=data;
             if(newVal=="true"||newVal==true){
+                if(intervalId!=null){
+                    return
+                }
+                $rootScope.needAutoUpdate=true;
                 intervalId=setInterval(function () {
                     $scope.$apply(function () {
                         $scope.reloadOrderList();
                     })
                 },1000)
             }else{
+                $rootScope.needAutoUpdate=false;
                 clearInterval(intervalId);
+                intervalId=null;
             }
         });
     },50)
@@ -46,6 +63,9 @@ app.controller('orderList',function ($scope,$rootScope,customerNewModal,NgTableP
                         // cashier:{
                         //     name:filter.cashier==undefined?null:filter.cashier
                         // }
+                        branchGroup: {
+                            id: $scope.foodBranchGroup
+                        },
                     },
                     pageNum:params.page()-1,
                     pageSize:params.count()

@@ -18,12 +18,12 @@ nav.navbar.navbar-default(role='navigation' ng-controller="navbar")
             li
                 a(ui-sref='orderList' ng-class="{'currentNav':stateName=='orderList'}" ng-click="stateName='orderList'  ")  Order
             li
-                a(ui-sref='productList'   ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ") Inventory
+                a(ui-sref='productList'   ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ") Supply
             li
                 a(ui-sref='statistics'   ng-class="{'currentNav':stateName=='statistics'}" ng-click="stateName='statistics'  ") Statistics
             li
-                a(ui-sref='productList'   ng-class="{'currentNav':stateName=='equipmentList'}" ng-click="stateName='equipmentList'  ") Equipment
-            li
+                a(ui-sref='equipmentAssetList'   ng-class="{'currentNav':stateName=='equipmentAssetList'}" ng-click="stateName='equipmentAssetList'  ") Equipment
+            //li
                 a(ui-sref='customerList' ng-class="{'currentNav':stateName=='customerList'}" ng-click="stateName='customerList'  ")  Customer
             li
                 a(ui-sref='employeeList'   ng-class="{'currentNav':stateName=='employeeList'}" ng-click="stateName='employeeList'  ") Employee
@@ -36,7 +36,7 @@ nav.navbar.navbar-default(role='navigation' ng-controller="navbar")
         ul.nav.navbar-nav.navbar-right
             li
                 a(href='/WInt/dist/html/logIn.html') Log In
-            li.dropdown
+            //li.dropdown
                 a.dropdown-toggle(href='#', data-toggle='dropdown')
                     | Dropdown 
                     b.caret

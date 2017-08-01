@@ -22,18 +22,20 @@ public class Product{
     @GeneratedValue(generator = "generator")
     String id;//数据id
     String name;//产品名称
-    String description;//产品描述
+//    String description;//产品描述
     String imagePath;
     Double unitPrice;//产品单价
 
     Date productionDate;//可以用于过期报警，生产日期
-    Integer daysToBad;//保质期，以天数为单位
+//    Integer daysToBad;//保质期，以天数为单位
     Date badDate;//可以用于过期报警
-
-    Date inDate;//入库时间
-    Integer count;
+//    Date inDate;//入库时间
+    Integer count;//可用数量
+    Integer countToAlarm;//数量小于多少时报警，当数量小于等于多少时需要报警
+    Integer daysLeftToAlarm;
+    Integer daysToRecharge;//要重新买满多少天的
     Double predictedConsumingDays;
-
+    Double predictedConsumingRatePerDay;
     @ManyToOne(fetch = FetchType.EAGER)
     BranchGroup branchGroup;//该产品所处在的分支
 }

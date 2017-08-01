@@ -14,6 +14,7 @@ import javax.annotation.Resource;
 @Data
 public class GenericService<RepoType extends JpaSpecificationExecutor&JpaRepository, T> {
     RepoType repo;
+//    public abstract void setRepo(RepoType repo);
     public Page<T> queryPage(T queryExample, Integer pageNum, Integer pageSize, String orderBy, Boolean OrderAsc){
         Sort.Direction direction= Sort.Direction.DESC;//default is order desc
         if(Boolean.TRUE.equals(OrderAsc)){//if order asc

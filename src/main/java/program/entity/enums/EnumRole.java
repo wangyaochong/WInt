@@ -3,7 +3,8 @@ package program.entity.enums;
 public enum EnumRole {
     RECEPTIONIST,
     CASHIER,
-
+    CHEF,
+    WAITER,
     GLOBAL_INVENTORY_MANAGER,
     BRANCH_INVENTORY_MANAGER,
 

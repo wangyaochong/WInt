@@ -1,28 +1,27 @@
-div(ng-controller='branchGroupList')
+div(ng-controller='equipmentAssetList')
+    toaster-container
     .panel(class='panel-default')
         .panel-body
+            div
+                h3(style="display:inline-block")  Equipment Assets
+
+
             button.btn.btn-default.pull-right(type='button' ng-click="addNewBranchGroup()") add
             table.table(class=' table-hover' ng-table="customerListTableParams" show-filter="true" autocomplete="off" )
                 tbody
                     tr(ng-repeat="item in $data")
-                        //td(ng-cloak="" title=" 'email' ", sortable=" 'email' " filter="{email:'text'}") {{item.email}}
+                        td(ng-cloak="" title=" 'image' ")
+                            img(alt='' ng-src="{{item.imagePath}}" style="height:100px")
                         td(ng-cloak="" title=" 'name' ", sortable=" 'name' "  filter="{name:'text'}" ) {{item.name}}
-                        td(ng-cloak="" title=" 'description' "  sortable=" 'description' "  filter="{description:'text'}") {{item.description}}
-                        td(ng-cloak="" title=" 'employee number' "  sortable=" 'description' "  filter="{description:'text'}") {{item.staffNumber}}
-                        td(ng-cloak="" title=" 'monthly profit' "  sortable=" 'description' "  filter="{description:'text'}") {{item.monthlyProfit}}
+                        td(ng-cloak="" title=" 'price' "  sortable=" 'price' "  filter="{price:'text'}") {{item.price}}
                         //td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}
-                        td(ng-cloak="" title=" 'createDate' "   sortable=" 'createDate' "   filter=" {createDate:'text'} ") {{item.createDate|date:"yyyy/MM/dd"}}
+                        //td(ng-cloak="" title=" 'createDate' "   sortable=" 'createDate' "   filter=" {createDate:'text'} ") {{item.createDate|date:"yyyy/MM/dd"}}
                         //td(ng-cloak="" title=" 'gender' "  sortable=" 'gender' " filter="{gender:'text'}") {{item.gender}}
                         td(ng-cloak="" title=" 'operation' ")
                             .btn-group.pull-right
+                                button.btn.btn-danger(type='button' ng-click="sendRepairMessage() ") need repair
                                 button.btn.btn-default(type='button' ng-click="addNewBranchGroup(item.id);customerListTableParams.reload() ") edit
                                 button.btn.btn-default(type='button' ng-click="deletebranchGroups(item.id);customerListTableParams.reload() ") delete
-
-    //span we can get basic information about different branch stores such as employee number,sales volume and so on, this page give a big picture of your chain
-
-
-
-
 
 
 

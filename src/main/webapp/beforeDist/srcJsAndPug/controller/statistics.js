@@ -5,7 +5,7 @@ app.controller("statistics",function ($scope,crud) {
         "Food Selling Cash",//2
         "Food Selling Trend",//3
         "Supplies consumption",//4
-        "Category Selling Trend",//5
+        // "Category Selling Trend",//5
     ]
     $scope.timeCycleOption=[
         'One Day',//0

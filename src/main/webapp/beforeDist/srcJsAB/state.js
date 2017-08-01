@@ -31,6 +31,10 @@ $stateProvider
         url:"/foodList",
         templateUrl:distHtmlControllerUrl+"foodList.html"
     })
+    .state("equipmentAssetList",{
+        url:"/equipmentAssetList",
+        templateUrl:distHtmlControllerUrl+"equipmentAssetList.html"
+    })
     .state("statistics",{
         url:"/statistics",
         templateUrl:distHtmlControllerUrl+"statistics.html"

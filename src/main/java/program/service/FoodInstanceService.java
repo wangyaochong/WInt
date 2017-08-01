@@ -44,6 +44,7 @@ public class FoodInstanceService extends GenericService<IFoodInstanceRepo,FoodIn
         Query nativeQuery = entityManager.createNativeQuery("select sum(count) from foodinstance where branchGroup_id=:branchGroupId and name=:name");
         nativeQuery.setParameter("branchGroupId",branchGroup.getId());
         nativeQuery.setParameter("name",food.getName());
+        Object singleResult = nativeQuery.getSingleResult();
         return Long.parseLong(nativeQuery.getSingleResult().toString());
     }
 
@@ -62,12 +63,12 @@ public class FoodInstanceService extends GenericService<IFoodInstanceRepo,FoodIn
 //                System.out.println("增加--->"+addNum+"--->条鱼汉堡的记录");
 //                addNum+=2;
 //            }else{
-            if(0==RandomUtils.nextInt(0,50)){//某种明星产品的占比
-                for(int i=0;i<currentFoodInsertCount;i++){
+            if(0==RandomUtils.nextInt(0,10)){//某种明星产品的占比
+//                for(int i=0;i<currentFoodInsertCount;i++){
                     foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(currentFoodIndex),orderCreateDate)));//选择权重更多的食品
-                }
+//                }
 //                totalOrderCount++;
-                currentFoodInsertCount+=(totalOrderCount/1000);
+//                currentFoodInsertCount+=(totalOrderCount/1000);
             }else{
                 foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(RandomUtils.nextInt(0, foodList.size())),orderCreateDate)));
             }
@@ -75,7 +76,7 @@ public class FoodInstanceService extends GenericService<IFoodInstanceRepo,FoodIn
 //            currentCount++;
             count--;
         }
-        totalOrderCount++;
+//        totalOrderCount++;
         return foodInstanceList;
     }
 

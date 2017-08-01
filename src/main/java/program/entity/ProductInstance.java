@@ -34,13 +34,13 @@ public class ProductInstance {//每一条被消耗的原材料都会有记录
     BranchGroup branchGroup;//该产品所处在的分支
     public ProductInstance(Product product,Date consumingDate){
         this.name=product.name;
-        this.description=product.description;
+//        this.description=product.description;
         this.unitPrice=product.unitPrice;
         this.imagePath=product.imagePath;
         this.productionDate=product.productionDate;
-        this.daysToBad=product.daysToBad;
+//        this.daysToBad=product.daysToBad;
         this.badDate=product.badDate;
-        this.inDate=product.inDate;
+//        this.inDate=product.inDate;
         this.outDate=consumingDate;
         this.branchGroup=product.branchGroup;
     }

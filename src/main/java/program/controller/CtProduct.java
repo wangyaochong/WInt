@@ -1,13 +1,10 @@
 package program.controller;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import program.controller.entry.EntryQueryPage;
-import program.entity.Customer;
 import program.entity.Product;
 import program.repository.IProductRepo;
 import program.service.ProductService;
@@ -18,11 +15,24 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/Product")
 public class CtProduct {
+    public static boolean simulationStarted=false;
+    public static boolean idealProductManage =false;
 
     @Resource
     IProductRepo productRepo;
     @Resource
     ProductService productService;
+
+    @RequestMapping("/startSimulation")
+    public ResponseInfo startSimulation(){
+        simulationStarted=true;
+        return new ResponseInfo();
+    }
+    @RequestMapping("/idealProductManage")
+    public ResponseInfo idealProduct(){
+        idealProductManage =true;
+        return new ResponseInfo();
+    }
 
     @RequestMapping("/save")
     public ResponseInfo save(@RequestBody Product obj){
