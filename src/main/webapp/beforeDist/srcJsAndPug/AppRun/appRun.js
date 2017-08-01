@@ -5,15 +5,11 @@ var distHtmlServiceUrl=distHtmlRootUrl+"service/";
 var distHtmlTestUrl=distHtmlRootUrl+"test/";
 var singlePageSize=1000000000;
 var datepickerInitTime=50;
-
 function nullIfUndefined(obj) {
     return obj==undefined?null:obj;
 }
 app.run(function ($rootScope,crud,$filter) {
-     $rootScope.currentUser=crud.getQueryResult("LogInLogOut/currentUser").data;
-
-
-
+    $rootScope.currentUser=crud.getQueryResult("LogInLogOut/currentUser").data;
     $rootScope.currentNav="branch";
     $rootScope.distRootUrl=distRootUrl;
     $rootScope.distHtmlRootUrl=distHtmlRootUrl;
@@ -40,9 +36,8 @@ app.run(function ($rootScope,crud,$filter) {
     }
     $rootScope.getOneFoodPrice = function (food) {
         var price= food.price * (100 - food.discountPercent) / 100 * food.count;
-
         var numberFilter=$filter("number")( price,2);
-        console.log("numberFilter",numberFilter)
+        // console.log("numberFilter",numberFilter)
         return parseFloat(numberFilter);
     }
     $rootScope.getFoodListPrice = function (foodList) {
@@ -50,14 +45,12 @@ app.run(function ($rootScope,crud,$filter) {
         for (var i = 0; i < foodList.length; i++) {
             totalPrice += $rootScope.getOneFoodPrice(foodList[i]);
         }
-        return totalPrice;
-        // return $filter("number")( totalPrice,2);
+        var totalPriceFilter=$filter("number")( totalPrice,2);
+        return parseFloat(totalPriceFilter);
     }
-
     $rootScope.categoriesFunc()
     $rootScope.branchGroupsFunc();
 })
-
 function initGetMethod($rootScope, crud) {
     var apiUrlList=["customers","employees","branchGroups","salarySendConfigs","products","categories","globalConfigs","foods","foodOrders","foodPackageDiscounts"];
     var getMethod=crud.getRestResult;
@@ -78,7 +71,6 @@ function initDeleteMethod($rootScope,crud) {
 }
 function initQueryPageMethod($rootScope, crud) {
     var apiUrlList=["Customer","Category","Product","BranchGroup","Employee","GlobalConfig","Food","FoodOrder","FoodPackageDiscount"]
-
     var queryPagePartUrl="/queryPage";
     var queryPageMethod=crud.postObjectResult;
     apiUrlList.forEach(function (apiUrl) {
@@ -86,8 +78,6 @@ function initQueryPageMethod($rootScope, crud) {
             return queryPageMethod(apiUrl+queryPagePartUrl,obj);
         }
     })
-    // var postObjectResult = crud.postObjectResult("Customer/queryPage",{condition:{age:1},pageNum:0,pageSize:2,orderBy:'email',orderAsc:false});
-    // console.log(postObjectResult);
 }
 function initSaveMethod($rootScope,crud) {
     var saveMethod=crud.postObjectResult;
@@ -98,7 +88,4 @@ function initSaveMethod($rootScope,crud) {
             saveMethod(apiUrl + savePartUrl, obj);
         }
     })
-    // $rootScope.createUser=function (user) {
-    //     saveMethod("User"+savePartUrl,user);
-    // }
 }

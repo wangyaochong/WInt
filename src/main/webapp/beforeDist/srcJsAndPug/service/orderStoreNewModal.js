@@ -4,6 +4,7 @@ app.service("orderStoreNewModal",function ($uibModal,$rootScope) {
             templateUrl: distHtmlServiceUrl + "orderStoreNewModal.html",
             controller: function ($scope, $timeout) {
                 $scope.order={
+                    orderStatus:'COOKING',
                     orderBeginDateTime:new Date(),
                     foodList:foodList,
                     cashier:$rootScope.currentUser,
@@ -16,7 +17,6 @@ app.service("orderStoreNewModal",function ($uibModal,$rootScope) {
                     modalInstance.dismiss();
                 }
                 $scope.clickYes = function () {
-                    $scope.order.orderBeginDateTime=null;
                     modalInstance.close($scope.order);
                 }
             }

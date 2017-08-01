@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import program.bean.StringAndNumber;
 import program.entity.FoodOrder;
 
 import java.util.List;
+import java.util.Map;
 
 @RepositoryRestResource
 public interface IFoodOrderRepo extends JpaRepository<FoodOrder,Long>,JpaSpecificationExecutor<FoodOrder> {
@@ -15,5 +17,5 @@ public interface IFoodOrderRepo extends JpaRepository<FoodOrder,Long>,JpaSpecifi
     @Query(nativeQuery = true,value = "SELECT DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d') as'date'  ,count(*)   as number  FROM `foodorder` where branchGroup_id=:branchGroupId group by DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d'),branchGroup_id")
     List<Object[]> getDateAndOrderCountListByBranchGroup(@Param("branchGroupId") String branchGroupId);
 
-
+    List<FoodOrder> findAllByOrderStatus(@Param("orderStatus") String orderStatus);
 }

@@ -6,6 +6,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.ServletContextAware;
 import program.entity.*;
 import program.entity.enums.EnumGender;
+import program.entity.enums.EnumOrderStatus;
 import program.entity.enums.EnumOrderType;
 import program.entity.enums.EnumRole;
 import program.repository.*;
@@ -41,6 +42,9 @@ public class AppInitService implements ServletContextAware {
     FoodInstanceService foodInstanceService;
     @Resource
     IFoodPackageDiscountRepo foodPackageDiscountRepo;
+    @Resource
+    IProductInstanceRepo productInstanceRepo;
+
 
     public static final String nameStoreWangFuJing = "Wang Fu Jing Store";
     public static final String nameStoreDongSi = "Dong Si Street Store";
@@ -48,15 +52,13 @@ public class AppInitService implements ServletContextAware {
     public static final String nameStoreTianAnMen="Tian An Men Store";
     public static final String nameStoreXiDanJoyCity="Xi Dan Joy City Store";
     public static final String nameStoreBeiJingRailStation="Bei Jing Rail Station Store";
-    public static int currentFoodIndex=0;
     public static final int foodDiscount =0;
     static Long addSaveFoodEveryCount=1000l;
     static Long currentCount=0l;
     static Long addNum=2l;
     final String imageBasePath = "/WInt/dist/img/餐厅图片/";
-    final Integer totalOrderDay = 10;
-
-
+    final Integer totalDataDayCount = 10;
+    public static  boolean initFinished=false;
     @Override
     public void setServletContext(ServletContext servletContext) {
         if (ObjectUtils.isEmpty(globalConfigRepo.findAll())) {//如果没有初始化数据
@@ -64,13 +66,14 @@ public class AppInitService implements ServletContextAware {
             initBranchGroup();
             initCustomer();
             initEmployee();
-            initCategory();
             initFood();
             initProduct();
             initOrder();
             initFoodMonthlySellNumber();
             initPackageDiscount();
+            initProductInstance();
         }
+        initFinished=true;
     }
     public Food getFishBurgerFromFoodList(List<Food> foodList){
         for(int i=0;i<foodList.size();i++){
@@ -81,33 +84,6 @@ public class AppInitService implements ServletContextAware {
         System.out.println("Fish burger not found");
         return null;
     }
-
-
-    public List<FoodInstance> randomCreateFoodInstanceFromFoodList(List<Food> foodList, Integer foodCount, Integer fluctuateCount,Date orderCreateDate) {
-        ArrayList<FoodInstance> foodInstanceList = new ArrayList<>();
-        Integer count = foodCount + fluctuateCount / 2 - RandomUtils.nextInt(0, fluctuateCount + 1);//最终选取的食品数量可能多可能少，有波动
-        Food fishBurgerFromFoodList = getFishBurgerFromFoodList(foodList);
-        while (count > 0) {
-//            if(currentCount.equals(addSaveFoodEveryCount)){
-//                for(int i=0;i<addNum;i++){
-//                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(fishBurgerFromFoodList,orderCreateDate)));//添加趋势增长的食品
-//                }
-//                currentCount=0l;
-//                System.out.println("增加--->"+addNum+"--->条鱼汉堡的记录");
-//                addNum+=2;
-//            }else{
-                if(0==RandomUtils.nextInt(0,30)){//某种明星产品的占比
-                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(currentFoodIndex),orderCreateDate)));//选择权重更多的食品
-                }else{
-                    foodInstanceList.add(foodInstanceRepo.save(new FoodInstance(foodList.get(RandomUtils.nextInt(0, foodList.size())),orderCreateDate)));
-                }
-//            }
-//            currentCount++;
-            count--;
-        }
-        return foodInstanceList;
-    }
-
     public void initOneStoreOrder(
             String storeName,//需要初始化的商店的名字
             Integer foodCountPerOrder,//每单平均点餐个数
@@ -118,16 +94,16 @@ public class AppInitService implements ServletContextAware {
         BranchGroup branchToSet = branchGroupRepo.queryBranchGroupByName(storeName);
         List<Food> foodList = foodRepo.queryFoodsByBranchGroup(branchToSet);
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, -totalOrderDay+1);
+        calendar.add(Calendar.DATE, -totalDataDayCount +1);
         Date orderCreateDate = calendar.getTime();
         Integer totalOrderCount = 0;
-        for (int i = 0; i < totalOrderDay; i++) {
+        for (int i = 0; i < totalDataDayCount; i++) {
             Integer tempOrderCount = initOrderCountEveryDay + orderCountFluctuation / 2 - RandomUtils.nextInt(0, orderCountFluctuation + 1);
             while (tempOrderCount > 0) {
-                List<FoodInstance> foodInstanceList = randomCreateFoodInstanceFromFoodList(foodList, foodCountPerOrder, foodCountFluctuation,orderCreateDate);//每一个订单都是不同的食物列表
+                List<FoodInstance> foodInstanceList = foodInstanceService.randomCreateFoodInstanceFromFoodList(foodList, foodCountPerOrder, foodCountFluctuation,orderCreateDate);//每一个订单都是不同的食物列表
                 List<Employee> employees = employeeRepo.queryEmployeesByBranchGroupAndRole(branchToSet, EnumRole.CASHIER.toString());
                 Employee employee = employees.get(RandomUtils.nextInt(0, employees.size()));
-                FoodOrder foodOrder = new FoodOrder(null, null, employee, foodInstanceList, orderCreateDate, null, foodInstanceService.getTotalFoodListPrice(foodInstanceList), false, EnumOrderType.STORE.toString(), branchToSet);
+                FoodOrder foodOrder = new FoodOrder(null, null, employee, foodInstanceList, orderCreateDate, null, foodInstanceService.getTotalFoodListPrice(foodInstanceList), false, EnumOrderType.STORE.toString(), EnumOrderStatus.DELIVERED.toString(), branchToSet);
                 foodOrderRepo.save(foodOrder);
                 tempOrderCount--;
                 totalOrderCount++;
@@ -137,19 +113,45 @@ public class AppInitService implements ServletContextAware {
             calendar.add(Calendar.DATE,1);
             orderCreateDate=calendar.getTime();
         }
-        currentFoodIndex++;
+        foodInstanceService.setCurrentFoodIndex(foodInstanceService.getCurrentFoodIndex()+1);
     }
-
+    public void initBranchGroup() {
+        if (ObjectUtils.isEmpty(branchGroupRepo.findAll())) {
+//            branchGroupRepo.save(new BranchGroup(nameStoreDongSi, "store No.1", "海淀区花园路2号翠微大厦牡丹园店1楼(近牡丹园地铁站西北口)", new Date().getTime(), foodDiscount));
+//            branchGroupRepo.save(new BranchGroup(nameStoreTianAnMen, "store No.2", "北京市海淀区双清路30号", new Date().getTime(), foodDiscount));
+            BranchGroup save = branchGroupRepo.save(new BranchGroup(nameStoreWangFuJing, "store No.3", "王府井大街99号首层、地下一层", new Date().getTime(), foodDiscount));
+//            branchGroupRepo.save(new BranchGroup(nameStoreYongHeGong, "store No.4", "雍和宫西南角翻建商业A区1层", new Date().getTime(), foodDiscount));
+//            branchGroupRepo.save(new BranchGroup(nameStoreBeiJingRailStation, "store No.5", "北京市东城区北京火车站西街北京站站前广场西侧", new Date().getTime(), foodDiscount));
+//            branchGroupRepo.save(new BranchGroup(nameStoreXiDanJoyCity, "store No.6", "北京市西城区西单横二条59号西单明珠商品市场地下1层", new Date().getTime(), foodDiscount));
+            initCategory(save);
+        }
+    }
     public void initOrder() {
         Integer initOrderCount=150;
-        initOneStoreOrder(nameStoreWangFuJing, 6, 4, initOrderCount, 2, 30);
-        initOneStoreOrder(nameStoreDongSi, 6, 6, initOrderCount, 0, 30);
-        initOneStoreOrder(nameStoreXiDanJoyCity, 6, 2, initOrderCount, 0, 30);
-        initOneStoreOrder(nameStoreTianAnMen, 6, 4, initOrderCount, -1, 30);
-        initOneStoreOrder(nameStoreBeiJingRailStation, 6, 4, initOrderCount, 4, 30);
-        initOneStoreOrder(nameStoreYongHeGong, 6, 4, initOrderCount, -2, 30);
+        initOneStoreOrder(nameStoreWangFuJing, 6, 4, initOrderCount, 3, 30);
+//        initOneStoreOrder(nameStoreDongSi, 6, 6, initOrderCount, 0, 30);
+//        initOneStoreOrder(nameStoreXiDanJoyCity, 6, 2, initOrderCount, 0, 30);
+//        initOneStoreOrder(nameStoreTianAnMen, 6, 4, initOrderCount, -1, 30);
+//        initOneStoreOrder(nameStoreBeiJingRailStation, 6, 4, initOrderCount,6, 30);
+//        initOneStoreOrder(nameStoreYongHeGong, 6, 4, initOrderCount, -2, 30);
     }
-
+    public void initProductInstance(){//初始化库存消耗数据
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, -totalDataDayCount +1);
+        Date dataCreateDate = calendar.getTime();
+        for (int i = 0; i < totalDataDayCount; i++) {
+            for (BranchGroup branchGroup : branchGroupRepo.findAll()) {
+                for (Product product : productRepo.findAllByBranchGroup(branchGroup)) {
+                    for(int k=0;k<RandomUtils.nextInt(1,5);k++){
+                        ProductInstance productInstance=new ProductInstance(product,dataCreateDate);
+                        productInstanceRepo.save(productInstance);
+                    }
+                }
+            }
+            calendar.add(Calendar.DATE,1);
+            dataCreateDate=calendar.getTime();
+        }
+    }
     public void initProduct() {
         branchGroupRepo.findAll().stream().forEach(branchGroup -> {
             Date nowDate = new Date();
@@ -167,7 +169,7 @@ public class AppInitService implements ServletContextAware {
             productRepo.save(new Product(null, "Salt", "Salt", imageBasePath + "/消耗品/盐.jpg", 3.5d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "One-off chopsticks", "One-off chopsticks", imageBasePath + "/消耗品/一次性筷子.jpg", 12d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Disposable gloves", "Disposable gloves", imageBasePath + "/消耗品/一次性手套.jpg", 5.9d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
-            productRepo.save(new Product(null, "Disposable gloves", "Disposable gloves", imageBasePath + "/消耗品/一次性纸杯.jpg", 9.9d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
+            productRepo.save(new Product(null, "Disposable paper cup", "Disposable gloves", imageBasePath + "/消耗品/一次性纸杯.jpg", 9.9d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Tissue", "Tissue", imageBasePath + "/消耗品/纸巾.jpg", 36.9d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Cola", "Cola", imageBasePath + "/消耗品/可乐.jpg", 5.8d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
             productRepo.save(new Product(null, "Beer", "Beer", imageBasePath + "/消耗品/啤酒.jpg", 4.5d, productionDate, 180, timeToBadDate, new Date(), 5, null, branchGroup));
@@ -275,14 +277,15 @@ public class AppInitService implements ServletContextAware {
         );
     }
 
-    public void initCategory() {//初始化食品分类
-        categoryRepo.save(new Category(1l, "Breakfast", "Breakfast"));
-        categoryRepo.save(new Category(2l, "Hamburger", "Hamburger"));
-        categoryRepo.save(new Category(3l, "Snack", "Snack"));
-        categoryRepo.save(new Category(4l, "Dessert", "Dessert"));
-        categoryRepo.save(new Category(5l, "Drinks", "Drinks"));
-        categoryRepo.save(new Category(6l, "Coffee", "Coffee"));
+    public void initCategory(BranchGroup branchGroup) {//初始化食品分类
+        categoryRepo.save(new Category(1l, "Breakfast", "Breakfast",branchGroup));
+        categoryRepo.save(new Category(2l, "Hamburger", "Hamburger",branchGroup));
+        categoryRepo.save(new Category(3l, "Snack", "Snack",branchGroup));
+        categoryRepo.save(new Category(4l, "Dessert", "Dessert",branchGroup));
+        categoryRepo.save(new Category(5l, "Drinks", "Drinks",branchGroup));
+        categoryRepo.save(new Category(6l, "Coffee", "Coffee",branchGroup));
     }
+
 
     public void initEmployee() {
         List<BranchGroup> all = branchGroupRepo.findAll();
@@ -293,7 +296,7 @@ public class AppInitService implements ServletContextAware {
                         EnumGender.MALE.toString(), EnumRole.CASHIER.toString(), 3500, 0, 0, 0, branchGroup));
             }
             for (EnumRole enumRole : EnumRole.values()) {
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 1; i++) {
                     Employee employee = new Employee();
                     employee.setPassword("123456");
                     employee.setName(branchGroup.getName() + " " + enumRole.toString() + RandomUtils.nextInt(1, 100));
@@ -316,25 +319,15 @@ public class AppInitService implements ServletContextAware {
         }
     }
 
-    public void initBranchGroup() {
-        if (ObjectUtils.isEmpty(branchGroupRepo.findAll())) {
-            branchGroupRepo.save(new BranchGroup(nameStoreDongSi, "store No.1", "海淀区花园路2号翠微大厦牡丹园店1楼(近牡丹园地铁站西北口)", new Date().getTime(), foodDiscount));
-            branchGroupRepo.save(new BranchGroup(nameStoreTianAnMen, "store No.2", "北京市海淀区双清路30号", new Date().getTime(), foodDiscount));
-            branchGroupRepo.save(new BranchGroup(nameStoreWangFuJing, "store No.3", "王府井大街99号首层、地下一层", new Date().getTime(), foodDiscount));
-            branchGroupRepo.save(new BranchGroup(nameStoreYongHeGong, "store No.4", "雍和宫西南角翻建商业A区1层", new Date().getTime(), foodDiscount));
-            branchGroupRepo.save(new BranchGroup(nameStoreBeiJingRailStation, "store No.5", "北京市东城区北京火车站西街北京站站前广场西侧", new Date().getTime(), foodDiscount));
-            branchGroupRepo.save(new BranchGroup(nameStoreXiDanJoyCity, "store No.6", "北京市西城区西单横二条59号西单明珠商品市场地下1层", new Date().getTime(), foodDiscount));
-        }
-    }
+
     public void initCustomer() {
         if (ObjectUtils.isEmpty(customerRepo.findAll())) {
-            for (Integer i = 0; i < 100; i++) {
+            for (Integer i = 0; i < 12; i++) {
                 if (RandomUtils.nextInt(1, 4) == 1) {
                     customerRepo.save(new Customer(i.toString() + "@email.com", i.toString(), ((Integer) (i * 12345)).toString(), "beijing", new Date().getTime(), "FEMALE", Boolean.FALSE));
                 } else {
                     customerRepo.save(new Customer(i.toString() + "@email.com", i.toString(), ((Integer) (i * 12345)).toString(), "beijing", new Date()
                             .getTime(), EnumGender.MALE.toString(), Boolean.FALSE));
-
                 }
             }
         }

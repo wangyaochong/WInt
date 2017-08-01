@@ -1,15 +1,11 @@
 package program.service;
-
 import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Service;
 import program.bean.*;
 import program.bean.resultTransformer.TowColTransformer;
-import program.entity.BranchGroup;
-import program.entity.Food;
-import program.repository.IBranchGroupRepo;
-import program.repository.IFoodRepo;
+import program.entity.*;
+import program.repository.*;
 import program.service.bean.SqlQueryBean;
-
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -21,6 +17,12 @@ public class StatisticsService {
     IBranchGroupRepo branchGroupRepo;
     @Resource
     IFoodRepo foodRepo;
+    @Resource
+    IProductInstanceRepo productInstanceRepo;
+    @Resource
+    IProductRepo productRepo;
+    @Resource
+    ICategoryRepo categoryRepo;
 
     @Resource
     EntityManager entityManager;
@@ -82,8 +84,6 @@ public class StatisticsService {
         List<StringAndDouble> resultList = nativeQuery.getResultList();
         return resultList;
     }
-
-
     public List<StringAndNumber> getDateAndOrderCountListByBranchGroup(BranchGroup branchGroup){
         Query nativeQuery = entityManager.createNativeQuery(SqlQueryBean.getDateAndOrderCountListByBranchGroup);
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndDouble.class));
@@ -92,7 +92,7 @@ public class StatisticsService {
         return resultList;
     }
     public List<StringAndNumber> getDateAndOrderAmountByBranchGroup(BranchGroup branchGroup){
-        Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d')  ,count(*)    FROM `foodorder` where branchGroup_id=:branchGroupId group by DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d'),branchGroup_id");
+        Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d')  ,count(*)    FROM `foodorder` where orderType not like 'SYSTEM_FOR_PREPARATION' and  branchGroup_id=:branchGroupId group by DATE_FORMAT(orderBeginDateTime,'%Y/%c/%d'),branchGroup_id");
         nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndNumber.class));
         nativeQuery.setParameter("branchGroupId",branchGroup.getId());
         List<StringAndNumber> resultList = nativeQuery.getResultList();
@@ -106,8 +106,59 @@ public class StatisticsService {
         List<StringAndNumber> resultList = nativeQuery.getResultList();
         return resultList;
     }
+    public List<StringAndNumber> getDateAndFoodCountListByBranchGroupAndFoodCategory(BranchGroup branchGroup, Category category){
+        Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(createTime,'%Y/%c/%d')  ,sum(count)  FROM `foodinstance` where branchGroup_id=:branchGroupId and category_id=:categoryId group by DATE_FORMAT(createTime,'%Y/%c/%d') ");
+        nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndNumber.class));
+        nativeQuery.setParameter("branchGroupId",branchGroup.getId());
+        nativeQuery.setParameter("categoryId",category.getId());
+        List<StringAndNumber> resultList = nativeQuery.getResultList();
+        return resultList;
+    }
 
-    public List<BranchGroupAndMap> getAllBranchGroupDateAndFoodCountList(){
+
+    public List<StringAndNumber> getDateAndProductInstanceCountListByBranchGroupName(BranchGroup branchGroup,String productName){
+        Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(createTime,'%Y/%c/%d')  ,count(*)  FROM `productinstance` where branchGroup_id=:branchGroupId and name like :name group by DATE_FORMAT(createTime,'%Y/%c/%d') ");
+        nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndNumber.class));
+        nativeQuery.setParameter("branchGroupId",branchGroup.getId());
+        nativeQuery.setParameter("name",productName);
+        List<StringAndNumber> resultList = nativeQuery.getResultList();
+        return resultList;
+    }
+    public List<BranchGroupAndMap> getAllBranchGroupDateAndProductInstanceCountList(){
+        List<BranchGroupAndMap> result=new ArrayList<>();
+        branchGroupRepo.findAll().stream().forEach(branchGroup -> {
+            List<ProductInstance> branchGroupProductInstance = productInstanceRepo.findAllByBranchGroup(branchGroup);
+            Map<String,List<StringAndNumber>> foodCountMap=new HashMap<>();
+            ArrayList<String> mapKeys=new ArrayList<>();
+            branchGroupProductInstance.forEach(productInstance -> {
+                List<StringAndNumber> dateAndOrderAmountListByBranchGroupAndFoodName = getDateAndProductInstanceCountListByBranchGroupName(branchGroup, productInstance.getName());
+                mapKeys.add(productInstance.getName());
+                foodCountMap.put(productInstance.getName(), dateAndOrderAmountListByBranchGroupAndFoodName);
+            });
+            result.add(new BranchGroupAndMap(branchGroup,foodCountMap,mapKeys));
+        });
+        return result;
+    }
+    public MapAndMapKeys globalDateAndFoodCategoryCountList(){
+
+        return null;
+    }
+    public List<BranchGroupAndMap> branchGroupDateAndFoodCategoryCountList(){
+        List<BranchGroupAndMap> result=new ArrayList<>();
+        branchGroupRepo.findAll().stream().forEach(branchGroup -> {
+            List<Category> categories = categoryRepo.findAllByBranchGroup(branchGroup);
+            Map<String,List<StringAndNumber>> foodCountMap=new HashMap<>();
+            ArrayList<String> mapKeys=new ArrayList<>();
+            categories.forEach(category -> {
+                List<StringAndNumber> dateAndOrderAmountListByBranchGroupAndFoodName = getDateAndFoodCountListByBranchGroupAndFoodCategory(branchGroup, category);
+                mapKeys.add(category.getName());
+                foodCountMap.put(category.getName(), dateAndOrderAmountListByBranchGroupAndFoodName);
+            });
+            result.add(new BranchGroupAndMap(branchGroup,foodCountMap,mapKeys));
+        });
+        return result;
+    }
+    public List<BranchGroupAndMap> branchGroupDateAndFoodCountList(){
         List<BranchGroupAndMap> result=new ArrayList<>();
         branchGroupRepo.findAll().stream().forEach(branchGroup -> {
             List<Food> foods = foodRepo.queryFoodsByBranchGroup(branchGroup);
@@ -120,6 +171,27 @@ public class StatisticsService {
             });
             result.add(new BranchGroupAndMap(branchGroup,foodCountMap,mapKeys));
         });
+        return result;
+    }
+    public MapAndMapKeys globalDateAndProductInstanceCountList(){
+        Set<String> productNames=new HashSet<>();
+        branchGroupRepo.findAll().forEach(branchGroup -> {
+            List<Product> branchProduct = productRepo.findAllByBranchGroup(branchGroup);
+            for (Product product : branchProduct) {
+                productNames.add(product.getName());
+            }
+        });
+        MapAndMapKeys<StringAndNumber> result=new MapAndMapKeys();
+        result.setMap(new HashMap<>());
+        result.setMapKeys(new ArrayList<>());
+        for (Object name : productNames.toArray()) {
+            Query nativeQuery = entityManager.createNativeQuery("SELECT DATE_FORMAT(outDate,'%Y/%c/%d')  ,count(*)    FROM `productinstance` where name like :name group by DATE_FORMAT(outDate,'%Y/%c/%d') ");
+            nativeQuery.unwrap(SQLQuery.class).setResultTransformer(new TowColTransformer(StringAndNumber.class));
+            nativeQuery.setParameter("name",name);
+            List<StringAndNumber> resultList = nativeQuery.getResultList();
+            result.getMapKeys().add((String) name);
+            result.getMap().put((String) name,resultList);
+        }
         return result;
     }
     public MapAndMapKeys globalDateAndFoodCountList(){

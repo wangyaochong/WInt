@@ -32,7 +32,7 @@ public class Product{
 
     Date inDate;//入库时间
     Integer count;
-    Integer predictedConsumingDays;
+    Double predictedConsumingDays;
 
     @ManyToOne(fetch = FetchType.EAGER)
     BranchGroup branchGroup;//该产品所处在的分支

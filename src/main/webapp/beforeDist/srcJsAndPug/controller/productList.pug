@@ -1,17 +1,17 @@
 div(ng-controller='productList')
     .panel(class='panel-default')
-        .panel-heading
-            div
-                h3(style="display:inline-block") Categories
-                button.btn.btn-default.pull-right(type='button' ng-click="addNewCategory()") add category
-
-            legend
-            .btn-group
-                button.btn.btn-default(ng-repeat="x in categories") {{x.name}}
+        //.panel-heading
+        //    div
+        //        h3(style="display:inline-block") Categories
+        //        button.btn.btn-default.pull-right(type='button' ng-click="addNewCategory()") add category
+        //
+        //    legend
+        //    .btn-group
+        //        button.btn.btn-default(ng-repeat="x in categories") {{x.name}}
 
         .panel-body
             div
-                h3(style="display:inline-block")  Products
+                h3(style="display:inline-block")  Supplies   
                 button.btn.btn-default.pull-right(type='button' ng-click="addNewProduct()") add by file
                 button.btn.btn-default.pull-right(type='button' ng-click="addNewProduct()") add
 
@@ -24,6 +24,7 @@ div(ng-controller='productList')
                         td(ng-cloak="" title=" 'available amount' "   sortable=" 'count' "   filter=" {count:'text'} ") {{item.count}}
                         td(ng-cloak="" title=" 'production date' "   sortable=" 'productionDate' "   filter=" {productionDate:'text'} ") {{item.productionDate|date:"yyyy-MM-dd"}}
                         td(ng-cloak="" title=" 'bad date' "   sortable=" 'badDate' "   filter=" {badDate:'text'} ") {{item.badDate|date:"yyyy-MM-dd"}}
+                        td(ng-cloak="" title=" 'days to sustain' "  sortable=" 'badDate' "   filter=" {badDate:'text'} " ) {{item.predictedConsumingDays| number:2}}
                         td(ng-cloak="" title=" 'operation' ")
                             .btn-group.pull-right
                                 button.btn.btn-default(type='button' ng-click="addNewProduct(item);customerListTableParams.reload() ") edit

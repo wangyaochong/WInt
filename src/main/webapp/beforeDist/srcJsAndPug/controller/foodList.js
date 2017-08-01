@@ -1,4 +1,4 @@
-app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,foodSettingModal,$filter) {
+app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,foodSettingModal,$filter,toaster) {
     $scope.orderFoodList = [];
     $scope.categories = $rootScope.queryPageCategory({pageNum: 0, pageSize: singlePageSize}).data.content;
     $scope.foodsData = {};
@@ -112,9 +112,9 @@ app.controller("foodList", function ($scope, $rootScope, orderStoreNewModal,food
     }
     $scope.createNewOrder = function () {
         orderStoreNewModal.showModal(function(data){
-
-
             $rootScope.saveFoodOrder(data);
+            $scope.orderFoodList=[];
+            toaster.pop('info', "Order created", "Order created");
         },$scope.orderFoodList);
     }
     $scope.clearCart = function () {

@@ -44,6 +44,7 @@ public class FoodOrder {//交易记录
     Double totalPrice;//总价格
     Boolean isCancelled;//交易是否取消
     String orderType;
+    String orderStatus;
     @ManyToOne
     BranchGroup branchGroup;
 }

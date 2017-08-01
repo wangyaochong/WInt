@@ -3,7 +3,9 @@ app.controller("statistics",function ($scope,crud) {
         "Order Number",//0
         "Order Cash Amount",//1
         "Food Selling Cash",//2
-        "Food Selling Trend"//3
+        "Food Selling Trend",//3
+        "Supplies consumption",//4
+        "Category Selling Trend",//5
     ]
     $scope.timeCycleOption=[
         'One Day',//0
@@ -28,6 +30,29 @@ app.controller("statistics",function ($scope,crud) {
             }
             if($scope.timeCycleOption[2]==newVal[1]){
                 dayCount=30;
+            }
+
+            if($scope.figureOption[5]==newVal[0]){
+                var data = crud.getQueryResult("Statistics/globalBranchGroupDateAndFoodCategoryCountList").data;
+                data[0].mapKeys.forEach(function (key) {
+                    var list=data[0].map[key];
+                    list.splice(0,list.length-dayCount>=0?list.length-dayCount:0);
+                })
+                myChart.setOption(initLineWithMap(data[0],newVal[0]),true);
+            }
+            if($scope.figureOption[4]==newVal[0]){
+                var data = crud.getQueryResult("Statistics/globalProductInstanceCountList").data;
+                data.mapKeys.forEach(function (key) {
+                    var list=data.map[key];
+                    list.splice(0,list.length-dayCount>=0?list.length-dayCount:0);
+                })
+                // $scope.branchGroupFoodSellingCountList.forEach(function (one) {
+                //     one.mapKeys.forEach(function (key) {
+                //         var list=one.map[key];
+                //         list.splice(0,list.length-dayCount>=0?list.length-dayCount:0);
+                //     })
+                // })
+                myChart.setOption(initLineWithMap(data, newVal[0]),true);
             }
             if($scope.figureOption[0]==newVal[0]){
                 var data = crud.getQueryResult("Statistics/branchGroupDateAndOrderNumberCountList").data;
@@ -63,7 +88,7 @@ app.controller("statistics",function ($scope,crud) {
                     })
                 })
                 console.log("globalFoodSellCountList",data);
-                myChart.setOption(initLineWithFoodName(data,"Global Food Selling Trend"),true);
+                myChart.setOption(initLineWithMap(data,"Global Food Selling Trend"),true);
                 initAllBranchFoodSellingTrend($scope);
             }
         },100)
@@ -78,7 +103,7 @@ function initAllBranchFoodSellingRatio($scope) {
 function initAllBranchFoodSellingTrend($scope) {
     $scope.branchGroupFoodSellingCountList.forEach(function (one) {
         var myChart=echarts.init(document.getElementById(one.branchGroup.name));
-        myChart.setOption(initLineWithFoodName(one,"Food Selling Trend in "+ one.branchGroup.name),true);
+        myChart.setOption(initLineWithMap(one,"Food Selling Trend in "+ one.branchGroup.name),true);
     })
 }
 
@@ -121,7 +146,7 @@ function initPie(data,titleText) {
     };
     return option;
 }
-function initLineWithFoodName(data,titleText) {
+function initLineWithMap(data, titleText) {
     var series=[];
     for(var i=0;i<data.mapKeys.length;i++){
         series[i]={

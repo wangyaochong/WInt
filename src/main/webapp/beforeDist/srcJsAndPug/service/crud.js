@@ -73,11 +73,6 @@ app.service("crud",function ($http,$q) {
         })
         return defer.promise;
     }
-
-
-
-
-
     //用于RequestParam
     this.postQueryResult=function (url, query) {
         if(query===undefined){
@@ -94,7 +89,6 @@ app.service("crud",function ($http,$q) {
         })
         return result;
     }
-
     //用于RequestParam
     this.postQueryPromise=function (url, query) {
         if(query===undefined){
@@ -111,8 +105,6 @@ app.service("crud",function ($http,$q) {
         })
         return defer.promise;
     }
-
-
     this.deleteRestResult=function (url, rest) {
         if(rest===undefined){
             rest="";
@@ -143,7 +135,6 @@ app.service("crud",function ($http,$q) {
         })
         return defer.promise;
     }
-
     //用于RequestBody
     this.postObjectResult=function (url, obj) {
 
@@ -161,7 +152,6 @@ app.service("crud",function ($http,$q) {
         })
         return result;
     }
-
     //用于ModelAttribute
     this.getObjectResult=function (url, obj) {
         var result=null;
@@ -176,7 +166,6 @@ app.service("crud",function ($http,$q) {
         })
         return result;
     }
-
     //用于RequestBody
     this.postObjectPromise=function (url, obj) {
         var defer=$q.defer();
@@ -189,7 +178,6 @@ app.service("crud",function ($http,$q) {
         })
         return defer.promise;
     }
-
     //用于ModelAttribute
     this.getObjectPromise=function (url, obj) {
         var defer=$q.defer();

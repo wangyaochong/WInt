@@ -96,6 +96,8 @@ var processPath = {
 
         // '../beforeDist/libJs/lodash.js',
         '../beforeDist/libJs/echarts.js',
+        '../beforeDist/libJs/toaster.js',
+        '../beforeDist/libJs/bootstrap-switch.js',
         // '../beforeDist/libJs/xeditable.js',
         //侧边菜单插件
         // '../beforeDist/libJs/slideout.js',
@@ -107,7 +109,6 @@ var processPath = {
         // '../beforeDist/libCss/slick-theme.css',
         // '../beforeDist/libCss/AdminLTE.css',
         // '../beforeDist/libCss/bootstrap-select.css',
-
         '../beforeDist/libCss/bootstrap.css',
         '../beforeDist/libCss/ng-table.css',
         '../beforeDist/libCss/fileinput.css',
@@ -116,6 +117,8 @@ var processPath = {
         '../beforeDist/libCss/ui-bootstrap-csp.css',
         // angular-ui-select
         '../beforeDist/libCss/select.css',
+        '../beforeDist/libCss/toaster.css',
+        '../beforeDist/libCss/bootstrap-switch.css',
         //video.js
         // '../beforeDist/libCss/video-js.css',
         // '../beforeDist/libCss/xeditable.css',

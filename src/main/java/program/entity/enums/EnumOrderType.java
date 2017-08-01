@@ -2,5 +2,6 @@ package program.entity.enums;
 
 public enum EnumOrderType {
     ONLINE,
-    STORE
+    STORE,
+    SYSTEM_FOR_PREPARATION
 }
