@@ -1,0 +1,42 @@
+
+<div ng-controller="productList">
+  <div class="panel panel-default">
+    <!--.panel-heading-->
+    <!--    div-->
+    <!--        h3(style="display:inline-block") Categories-->
+    <!--        button.btn.btn-default.pull-right(type='button' ng-click="addNewCategory()") add category-->
+    <!---->
+    <!--    legend-->
+    <!--    .btn-group-->
+    <!--        button.btn.btn-default(ng-repeat="x in categories") {{x.name}}-->
+    <div class="panel-body">
+      <div>
+        <h3 style="display:inline-block;"> Supplies</h3>
+        <button class="btn btn-default pull-right" type="button" ng-click="addNewProduct()">add by file</button>
+        <button class="btn btn-default pull-right" type="button" ng-click="addNewProduct()">add</button>
+        <button class="btn btn-default pull-right" type="button" ng-click="startProductSimulation()">simulation</button>
+        <button class="btn btn-default pull-right" type="button" ng-click="idealProductManage()">export purchasing List</button>
+        <button class="btn btn-default pull-right" type="button" ng-click="idealProductManage()">ideal management</button>
+      </div>
+      <table class="table  table-hover" ng-table="customerListTableParams" show-filter="true" autocomplete="off">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td ng-cloak="" title=" 'image' "><img alt="" ng-src="{{item.imagePath}}" style="height:100px;"/></td>
+            <td ng-cloak="" title=" 'name' " sortable=" 'name' " filter="{name:'text'}">{{item.name}}</td>
+            <td ng-cloak="" title=" 'available amount' " sortable=" 'count' " filter=" {count:'text'} "><span class="label label-danger">{{item.countToAlarm}}</span><span class="label label-primary">{{item.count}}</span></td>
+            <td ng-cloak="" title=" 'days to sustain' " sortable=" 'badDate' " filter=" {badDate:'text'} "><span class="label label-danger">{{item.daysLeftToAlarm}}</span><span class="label label-primary">{{item.predictedConsumingDays| number:2}}</span></td>
+            <td ng-cloak="" title=" 'need to purchase' " sortable=" 'count' " filter=" {count:'text'} ">{{getNeedToPurchaseCount(item)}}</td>
+            <td ng-cloak="" title=" 'production date' " sortable=" 'productionDate' " filter=" {productionDate:'text'} ">{{item.productionDate|date:"yyyy-MM-dd"}}</td>
+            <td ng-cloak="" title=" 'bad date' " sortable=" 'badDate' " filter=" {badDate:'text'} ">{{item.badDate|date:"yyyy-MM-dd"}}</td>
+            <td ng-cloak="" title=" 'operation' ">
+              <div class="btn-group pull-right">
+                <button class="btn btn-default" type="button" ng-click="addNewProduct(item);customerListTableParams.reload() ">edit</button>
+                <button class="btn btn-default" type="button" ng-click="deleteproducts(item.id);customerListTableParams.reload() ">delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

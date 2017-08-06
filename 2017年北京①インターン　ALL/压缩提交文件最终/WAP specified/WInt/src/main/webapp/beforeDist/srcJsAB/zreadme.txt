@@ -1,0 +1,1 @@
+放置angularJS初始定义

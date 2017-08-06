@@ -1,0 +1,31 @@
+
+<div ng-controller="branchGroupList">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <button class="btn btn-default pull-right" type="button" ng-click="addNewBranchGroup()">add</button>
+      <table class="table  table-hover" ng-table="customerListTableParams" show-filter="true" autocomplete="off">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <!--td(ng-cloak="" title=" 'email' ", sortable=" 'email' " filter="{email:'text'}") {{item.email}}-->
+            <td ng-cloak="" title=" 'name' " sortable=" 'name' " filter="{name:'text'}">{{item.name}}</td>
+            <td ng-cloak="" title=" 'description' " sortable=" 'description' " filter="{description:'text'}">{{item.description}}</td>
+            <td ng-cloak="" title=" 'employee number' " sortable=" 'description' " filter="{description:'text'}">{{item.staffNumber}}</td>
+            <td ng-cloak="" title=" 'monthly profit' " sortable=" 'description' " filter="{description:'text'}">{{item.monthlyProfit}}</td>
+            <!--td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}-->
+            <td ng-cloak="" title=" 'createDate' " sortable=" 'createDate' " filter=" {createDate:'text'} ">{{item.createDate|date:"yyyy/MM/dd"}}</td>
+            <!--td(ng-cloak="" title=" 'gender' "  sortable=" 'gender' " filter="{gender:'text'}") {{item.gender}}-->
+            <td ng-cloak="" title=" 'operation' ">
+              <div class="btn-group pull-right">
+                <button class="btn btn-default" type="button" ng-click="addNewBranchGroup(item.id);customerListTableParams.reload() ">edit</button>
+                <button class="btn btn-default" type="button" ng-click="deletebranchGroups(item.id);customerListTableParams.reload() ">delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <h4>total employee number: 72</h4>
+      <h4>total monthly profit:207402</h4>
+    </div>
+  </div>
+  <!--span we can get basic information about different branch stores such as employee number,sales volume and so on, this page give a big picture of your chain-->
+</div>

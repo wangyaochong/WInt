@@ -1,0 +1,12 @@
+.component-wrapper {
+  position: relative; }
+
+.component-link-container {
+  width: 200px;
+  position: absolute;
+  left: 0;
+  top: 0; }
+
+.component-view-container {
+  margin-left: 200px;
+  margin-right: 10px; }

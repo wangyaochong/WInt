@@ -1,0 +1,34 @@
+.modal-content
+    //.modal-header
+        h4.modal-title Create New Branch Office
+    .modal-body
+        form(method='post', role='form' name="customerNewForm" autocomplete="off")
+            legend {{modalTitle}}
+            .form-group
+                label(for='email') email
+                input.form-control(ng-disabled="isEditing==true" type='text', name='email', id='email', placeholder='email...' ng-model="customer.email" )
+                //p(ng-show='customerNewForm.email.$invalid') please input a valid email
+            .form-group
+                label(for='name') name
+                input.form-control(type='text', name='name' id='name', placeholder='name...' ng-model='customer.name' )
+                //p(ng-show='customerNewForm.name.$invalid') please input your name
+            .form-group
+                label(for='phoneNumber') phone number
+                input.form-control(type='text' name='phoneNumber' id='phoneNumber' placeholder='phone number...' ng-model='customer' +
+                '.phoneNumber' )
+                //p(ng-show='customerNewForm.phoneNumber.$invalid') please input your phone number
+            //.form-group
+                label(for='age') age
+                input.form-control(type='number' name='age' id='age'  placeholder='age...' ng-model='customer.age')
+            .form-group
+                label(for='birthDate') birth date
+                input.form-control(type='text' name='birthDate' id='birthDate' placeholder='birth date....' ng-model='customer.birthDate')
+            .form-group
+                label(for='gender') gender
+                select.form-control(name='name', id='gender' ng-model="customer.gender" )
+                    option(value='MALE' selected="selected")  MALE
+                    option(value='FEMALE') FEMALE
+
+    .modal-footer
+        button.btn.btn-default(type='button', ng-click="closeModal()") Close
+        button.btn.btn-primary(type='button' ng-click="clickYes()") Yes

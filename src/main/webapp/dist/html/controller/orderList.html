@@ -1,0 +1,57 @@
+
+<div ng-controller="orderList">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div>
+        <h3 class="inline-block">Orders</h3>
+        <!--button.btn.btn-default.pull-right(type='button' ng-click="addNewCustomer()") add
+        <span class="input-group-addon">
+              <input type="checkbox" aria-label="...">
+            </span>
+        -->
+        <div class="switch pull-right">
+          <h4 class="inline-block">Auto Update</h4>
+          <input id="needAutoUpdate" type="checkbox" ng-model="needAutoUpdate"/>
+        </div>
+        <button class="btn btn-default pull-right" type="button" ng-click="simulateOrder()" style="margin-right:20px;">simulation</button>
+      </div>
+      <table class="table table-bordered  table-hover" ng-table="ordersTableParams" show-filter="true" autocomplete="off">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td ng-cloak="" title=" 'Create time' " sortable=" 'orderBeginDateTime' " filter="{orderBeginDateTime:'text'}">{{item.orderBeginDateTime|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+            <td ng-cloak="" title=" 'Cashier' " sortable=" 'cashier' " filter="{cashier:'text'}">{{item.cashier.name}}</td>
+            <td ng-cloak="" title=" 'Total money' " sortable=" 'totalPrice' " filter="{totalPrice:'text'}">{{item.totalPrice|number:2}}/RMB</td>
+            <td ng-cloak="" title=" 'Order type' " sortable=" 'orderType' " filter="{orderType:'text'}">{{item.orderType}}</td>
+            <td ng-cloak="" title=" 'Order status' " sortable=" 'orderStatus' " filter=" {orderStatus:'text'} ">{{item.orderStatus}}<a class="btn btn-primary pull-right" ng-if="item.orderStatus=='COOKING' " ng-click="setOrderStatusToCooked(item)">Mark as cooked</a></td>
+            <td ng-cloak="" title=" 'Food list' ">
+              <h4 ng-repeat="f in item.foodList">{{f.name}}</h4>
+            </td>
+            <!--td(ng-cloak="" title=" 'Operation' ")-->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!--.panel(class='panel-default')
+  .panel-body
+      div
+          h3.inline-block Orders
+          button.btn.btn-default.pull-right(type='button' ng-click="addNewCustomer()") add
+      table.table(class='table-bordered table-hover')
+          thead
+              tr
+                  th Create time
+                  th Cashier
+                  th Order type
+                  th Food list
+                  th Total Money
+          tbody
+              tr(ng-repeat="o in orders")
+                  td {{o.orderBeginDateTime | date:"yyyy-MM-dd HH:mm:ss"}}
+                  td {{o.cashier.name}}
+                  td {{o.orderChannel}}
+                  td
+                      h4(ng-repeat="f in o.foodList") {{f.name}}
+                  td {{o.totalPrice}}/RMB
+  -->
+</div>

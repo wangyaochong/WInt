@@ -1,0 +1,47 @@
+
+<div class="modal-content">
+  <div class="modal-body">
+    <form action="" method="post" role="form" autocomplete="off">
+      <legend>New Order</legend>
+      <div class="form-group">
+        <label>Order time</label>
+        <input class="form-control" type="datetime-local" name="createDate" id="createDate" placeholder="create date...." ng-model="order.orderBeginDateTime" ng-disabled="true"/>
+        <label for="description">Cashier</label>
+        <input class="form-control" name="description" id="description" placeholder="Input..." ng-model="currentUser.name" ng-disabled="true"/>
+        <label>Order type</label>
+        <input class="form-control" ng-model="order.orderType" ng-disabled="true"/>
+        <!--label(for='name') Table Number-->
+        <!--input.form-control(type='number', name='name', id='name', placeholder='Input...' ng-model="branchGroup.name")-->
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>name</th>
+              <th>discount</th>
+              <th>price</th>
+              <th>number</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="x in order.foodList">
+              <td>{{x.name}}</td>
+              <td>{{x.discountPercent}}%</td>
+              <td>{{x.price}}/RMB</td>
+              <td>{{x.count}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">total price: {{getFoodListPrice(order.foodList)}}/RMB</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="closeModal()">Close</button>
+    <button class="btn btn-primary" type="button" ng-click="clickYes()">Yes</button>
+  </div>
+</div>
+<!--script.-->
+<!--    createDate.value = new Date().Format("yyyy-MM-ddThh:mm:ss");-->

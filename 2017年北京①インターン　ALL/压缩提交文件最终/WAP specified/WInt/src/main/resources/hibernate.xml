@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+
+    <!--配置c3p0数据库连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+        <property name="jdbcUrl"
+        value="jdbc:mysql://127.0.0.1/wint?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8">
+        </property>
+        <property name="user" value="wangyaochong"></property>
+        <property name="password" value="qwerqwer"></property>
+        <property name="maxPoolSize" value="50"></property>
+        <property name="minPoolSize" value="5"></property>
+        <property name="acquireIncrement" value="5"></property>
+        <property name="loginTimeout" value="1200"></property>
+    </bean>
+
+
+    <!--数据源-->
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">-->
+        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>-->
+        <!--<property name="url"-->
+                  <!--value="jdbc:mysql://127.0.0.1/teachingplatform?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"></property>-->
+        <!--<property name="username" value="wangyaochong"></property>-->
+        <!--<property name="password" value="qwerqwer"></property>-->
+    <!--</bean>-->
+
+
+
+    <!--<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" scope="singleton">-->
+        <!--<property name="dataSource" ref="dataSource"></property>-->
+        <!--<property name="hibernateProperties">-->
+            <!--<props>-->
+                <!--<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>-->
+                <!--<prop key="hibernate.hbm2ddl.auto">update</prop>-->
+                <!--<prop key="hibernate.show_sql">false</prop>-->
+                <!--<prop key="hibernate.format_sql">false</prop>-->
+                <!--<prop key="current_session_context_class">thread</prop>-->
+            <!--</props>-->
+        <!--</property>-->
+        <!--<property name="packagesToScan" value="program.entity"></property>-->
+    <!--</bean>-->
+
+
+    <!--packagesToScan可以代替annotateClasses属性-->
+    <!--<property name="annotatedClasses">-->
+    <!--&lt;!&ndash;说明使用注解的entity，不写此属性会导致无法识别对应的表&ndash;&gt;-->
+    <!--<list>-->
+    <!--<value>program.entity.PersonEntity</value>-->
+    <!--<value>program.entity.PrivilegeEntity</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--<property name="annotatedPackages" value="program.entity"></property>-->
+
+
+    <!--<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">-->
+        <!--<property name="sessionFactory" ref="sessionFactory"></property>-->
+        <!--&lt;!&ndash;<property name="dataSource" ref="dataSource"></property>&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name=""&ndash;&gt;-->
+    <!--</bean>-->
+    <tx:advice id="transactionInterceptor" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="txAop"
+                      expression="execution(* program.controller.*.*(..)) or execution(* program.dao.*.*(..)) or execution(* program.service.*.*(..))"></aop:pointcut>
+        <aop:advisor advice-ref="transactionInterceptor" pointcut-ref="txAop"></aop:advisor>
+    </aop:config>
+
+
+        <!--注意，此处需要配置aspectJ的pom依赖，不然会报错：提示找不到aspectJweaver-->
+        <!--<aop:pointcut id="txAop" expression="execution(* program.dao.*.*(*)) or execution(* program.util.*.*(*)) "></aop:pointcut>-->
+        <!--
+            #*可以匹配单个参数
+            #..可以匹配任意个参数
+            #在配置了transactionManager的条配件下，如果需要调用getCurrentSession，aop一定要配置到相关的方法
+        -->
+                      <!--expression="execution(* program.dao.*.*(..)) or execution(* program.service.*.*(..))"></aop:pointcut>-->
+
+
+
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <!-- 指定数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定Jpa持久化实现厂商类,这里以Hibernate为例 -->
+        <property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+        <!-- 指定Entity实体类包路径 -->
+        <property name="packagesToScan" >
+            <array>
+                <value>program.entity</value>
+            </array>
+        </property>
+        <!-- 指定JPA属性；如Hibernate中指定是否显示SQL的是否显示、方言等 -->
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+                <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.jdbc.fetch_size">50</prop>
+                <prop key="hibernate.jdbc.batch_size">50</prop>
+            </props>
+        </property>
+        <!--<property name=""-->
+
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="transactionManager"
+          class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+    <jpa:repositories base-package="program.repository" repository-impl-postfix="Impl"
+                      entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"></jpa:repositories>
+    <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
+    <!--如果使用上面这句，就可以不用配置事务切面，
+    在每一个方法中自己使用@Transactional标记，可以进行事务操作-->
+</beans>

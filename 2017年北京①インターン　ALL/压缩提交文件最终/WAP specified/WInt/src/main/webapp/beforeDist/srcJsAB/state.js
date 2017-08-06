@@ -1,0 +1,41 @@
+$stateProvider
+    .state('componentNav',{
+        url:'/componentNav',
+        templateUrl:distHtmlControllerUrl+'componentNav.html'
+    })
+    .state('component',{
+        url:'/component',
+        templateUrl:distHtmlControllerUrl+"component.html"
+})
+    .state('branchGroupList',{
+        url:'/branchGroupList',
+        templateUrl:distHtmlControllerUrl+'branchGroupList.html'
+    })
+    .state("employeeList",{
+        url:'/employeeList',
+        templateUrl:distHtmlControllerUrl+'employeeList.html'
+    })
+    .state('customerList',{
+        url:'/customerList',
+        templateUrl:distHtmlControllerUrl+'customerList.html'
+    })
+    .state("productList",{
+        url:'/productList',
+        templateUrl:distHtmlControllerUrl+'productList.html'
+    })
+    .state("orderList",{
+        url:"/orderList",
+        templateUrl:distHtmlControllerUrl+"orderList.html"
+    })
+    .state("foodList",{
+        url:"/foodList",
+        templateUrl:distHtmlControllerUrl+"foodList.html"
+    })
+    .state("statistics",{
+        url:"/statistics",
+        templateUrl:distHtmlControllerUrl+"statistics.html"
+    })
+    .state('component.customerNew',{
+        url:'/customerNew',
+        templateUrl:distHtmlControllerUrl+"customerNew.html"
+});

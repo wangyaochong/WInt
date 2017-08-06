@@ -1,0 +1,48 @@
+@import "global";
+nav.navbar.navbar-default{
+  background-color: $backgroundColor;
+}
+ul.nav.navbar-nav>li:hover{
+  background-color: $hoverButton;
+}
+
+
+button.navbar-toggle:hover{
+  background-color: $hoverButton ;
+}
+ul.nav.navbar-nav>li>a{
+  color: $navTextColor!important;
+}
+ul.nav.navbar-nav>li>a:hover{
+  color: $navTextColor!important;
+}
+a.navbar-brand{
+  color:$navTextColor!important;
+}
+
+
+
+li.dropdown >a.dropdown-toggle{
+  color: $navTextColor!important;
+}
+li.dropdown.open>a.dropdown-toggle{
+  background-color: $backgroundColor!important;
+  color: $navTextColor!important;
+}
+ul.dropdown-menu{
+  background-color: $backgroundColor!important;
+}
+ul.dropdown-menu>li>a{
+  color:$navTextColor!important;
+}
+ul.dropdown-menu>li>a{
+  color:$navTextColor!important;
+}
+ul.dropdown-menu>li>a:hover{
+  color:$navTextColor!important;
+  background-color: $hoverButton;
+}
+
+.currentNav{
+  background-color: $hoverButton!important;
+}

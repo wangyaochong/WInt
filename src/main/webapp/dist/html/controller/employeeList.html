@@ -1,0 +1,60 @@
+
+<div ng-controller="employeeList">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <table class="table  table-hover">
+        <h3>Salary Send Config</h3>
+        <tbody>
+          <tr>
+            <td>payCardNumber:</td>
+            <td>
+              <input class="form-control" type="text" placeholder="Input..." ng-model="globalConfig.salaryPayCardNumber" ng-disabled="isEditingSalarySendConfig==false"/>
+            </td>
+            <td>salaryDay:</td>
+            <td>
+              <input class="form-control" type="number" min="1" max="28" placeholder="Input..." ng-model="globalConfig.salarySendingDate" ng-disabled="true"/>
+            </td>
+            <td>nextSalaryDay:</td>
+            <td>
+              <input class="form-control" type="number" min="1" max="28" placeholder="Input..." ng-model="globalConfig.salaryNextSendingDate" ng-disabled="isEditingSalarySendConfig==false"/>
+            </td>
+            <td>operation</td>
+            <td>
+              <button class="btn btn-default" ng-show="isEditingSalarySendConfig==false" type="button" ng-click="isEditingSalarySendConfig=true">edit</button>
+              <button class="btn btn-default" ng-show="isEditingSalarySendConfig==true" type="button" ng-click="isEditingSalarySendConfig=false;saveSalarySendConfig()">save</button>
+              <button class="btn btn-default" ng-show="isEditingSalarySendConfig==true" type="button" ng-click="isEditingSalarySendConfig=false;getSendSalaryConfig()">cancel</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="panel-body">
+    <div>
+      <h3 style="display:inline-block;">Employees</h3>
+      <button class="btn btn-default pull-right" type="button" ng-click="addNewEmployee()">add by file</button>
+      <button class="btn btn-default pull-right" type="button" ng-click="addNewEmployee()">add</button>
+    </div>
+    <table class="table  table-hover" ng-table="customerListTableParams" show-filter="true" autocomplete="off">
+      <tbody>
+        <tr ng-repeat="item in $data">
+          <td ng-cloak="" title=" 'id' " sortable=" 'id' " filter="{id:'text'}">{{item.id}}</td>
+          <td ng-cloak="" title=" 'branch office' " sortable=" 'branchGroup' " filter="{branchGroup:'text'}">{{item.branchGroup.name}}</td>
+          <td ng-cloak="" title=" 'role' " sortable=" 'role' " filter="{role:'text'}">{{item.role}}</td>
+          <td ng-cloak="" title=" 'salary' " sortable=" 'salary' " filter="{salary:'text'}">{{item.salary}}</td>
+          <td ng-cloak="" title=" 'email' " sortable=" 'email' " filter="{email:'text'}">{{item.email}}</td>
+          <td ng-cloak="" title=" 'name' " sortable=" 'name' " filter="{name:'text'}">{{item.name}}</td>
+          <td ng-cloak="" title=" 'phone' " sortable=" 'phoneNumber' " filter="{phoneNumber:'text'}">{{item.phoneNumber}}</td>
+          <td ng-cloak="" title=" 'gender' " sortable=" 'gender' " filter="{gender:'text'}">{{item.gender}}</td>
+          <td ng-cloak="" title=" 'birthDate' ">{{item.birthDate|date:"yyyy/MM/dd"}}</td>
+          <td class="table-edit-col" ng-cloak="" title=" 'operation' ">
+            <div class="btn-group pull-right">
+              <button class="btn btn-default" type="button" ng-click="addNewEmployee(item);customerListTableParams.reload() ">edit</button>
+              <button class="btn btn-default" type="button" ng-click="deleteemployees(item.id);customerListTableParams.reload() ">delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

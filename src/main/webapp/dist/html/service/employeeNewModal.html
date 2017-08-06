@@ -1,0 +1,33 @@
+
+<div class="modal-content">
+  <div class="modal-body">
+    <form method="post" role="form" name="employeeNewForm" autocomplete="off">
+      <legend>{{modalTitle}}</legend>
+      <div class="form-group">
+        <label>branch office</label>
+        <select class="form-control" ng-if="employee.branchGroup" ng-model="employee.branchGroup" ng-options="x.name for x in branchGroups"></select>
+        <label>role</label>
+        <select class="form-control" ng-model="employee.role" ng-options="x for x in roles"></select>
+        <label for="salary">salary</label>
+        <input class="form-control" type="number" name="salary" id="salary" placeholder="salary..." ng-model="employee.salary"/>
+        <label for="name">name</label>
+        <input class="form-control" type="text" name="name" id="name" placeholder="name..." ng-model="employee.name"/>
+        <label for="email">email</label>
+        <input class="form-control" type="text" name="email" id="email" placeholder="email..." ng-model="employee.email"/>
+        <label for="phoneNumber">phone number</label>
+        <input class="form-control" type="text" name="phoneNumber" id="phoneNumber" placeholder="phone number..." ng-model="employee.phoneNumber"/>
+        <label for="birthDate">birth date</label>
+        <input class="form-control" type="text" name="birthDate" id="birthDate" placeholder="birth date...." ng-model="employee.birthDate"/>
+        <label for="gender">gender</label>
+        <select class="form-control" name="name" id="gender" ng-model="employee.gender">
+          <option value="MALE" selected="selected"> MALE</option>
+          <option value="FEMALE">FEMALE</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="closeModal()">Close</button>
+    <button class="btn btn-primary" type="button" ng-click="clickYes()">Yes</button>
+  </div>
+</div>

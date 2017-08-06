@@ -1,0 +1,28 @@
+
+<div ng-controller="customerList">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div>
+        <h3 class="inline-block">Customers</h3>
+        <button class="btn btn-default pull-right" type="button" ng-click="addNewCustomer()">add</button>
+      </div>
+      <table class="table  table-hover" ng-table="customerListTableParams" show-filter="true" autocomplete="off">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td ng-cloak="" title=" 'email' " sortable=" 'email' " filter="{email:'text'}">{{item.email}}</td>
+            <td ng-cloak="" title=" 'name' " sortable=" 'name' " filter="{name:'text'}">{{item.name}}</td>
+            <td ng-cloak="" title=" 'phone' " sortable=" 'phoneNumber' " filter="{phoneNumber:'text'}">{{item.phoneNumber}}</td>
+            <td ng-cloak="" title=" 'gender' " sortable=" 'gender' " filter="{gender:'text'}">{{item.gender}}</td>
+            <td ng-cloak="" title=" 'birthDate' ">{{item.birthDate|date:"yyyy/MM/dd"}}</td>
+            <td ng-cloak="" title=" 'operation' ">
+              <div class="btn-group pull-right">
+                <button class="btn btn-default" type="button" ng-click="addNewCustomer(item.email);customerListTableParams.reload() ">edit</button>
+                <button class="btn btn-default" type="button" ng-click="deletecustomers(item.email);customerListTableParams.reload() ">delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

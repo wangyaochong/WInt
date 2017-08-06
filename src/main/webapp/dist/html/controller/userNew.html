@@ -1,0 +1,73 @@
+
+<div ng-controller="userNew">
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <td colspan="2">Create New User</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>log in account</td>
+        <td>
+          <input type="text" ng-model="user.number"/>
+        </td>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td>
+          <input type="text" ng-model="user.name"/>
+        </td>
+      </tr>
+      <tr>
+        <td>ID number</td>
+        <td>
+          <input type="text" ng-model="user.identityNumber"/>
+        </td>
+      </tr>
+      <tr>
+        <td>phone number</td>
+        <td>
+          <input type="text" ng-model="user.phoneNumber"/>
+        </td>
+      </tr>
+      <tr>
+        <td>age</td>
+        <td>
+          <input type="text" ng-model="user.age"/>
+        </td>
+      </tr>
+      <tr>
+        <td>birthDate</td>
+        <td>
+          <input type="text" ng-model="user.birthDate"/>
+        </td>
+      </tr>
+      <tr>
+        <td>userType</td>
+        <td>
+          <input type="text" ng-model="user.userType"/>
+        </td>
+      </tr>
+      <tr>
+        <td>salary</td>
+        <td>
+          <input type="text" ng-model="user.salary"/>
+        </td>
+      </tr>
+      <tr>
+        <td>group</td>
+        <td>
+          <input type="text" ng-model="user.group"/>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="2">
+          <button class="btn btn-default" type="button" ng-click="saveUser(user)">Create</button>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

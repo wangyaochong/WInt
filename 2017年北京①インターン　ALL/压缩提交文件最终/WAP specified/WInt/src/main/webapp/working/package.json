@@ -1,0 +1,46 @@
+{
+  "name": "spring",
+  "version": "1.0.0",
+  "description": "教学辅助平台",
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/"
+  },
+  "dependencies": {
+    "admin-lte": "^2.3.8",
+    "angular": "^1.5.9",
+    "angular-sanitize": "^1.6.1",
+    "angular-ui-router": "^0.3.2",
+    "angularjs-toaster": "^2.1.0",
+    "autosize": "^3.0.20",
+    "browser-sync": "^2.18.12",
+    "echarts": "^3.6.2",
+    "galleria": "^1.5.1",
+    "gulp": "*",
+    "gulp-concat": "*",
+    "gulp-html2jade": "*",
+    "gulp-jade": "*",
+    "gulp-jshint": "*",
+    "gulp-ng-annotate": "^2.0.0",
+    "gulp-plumber": "*",
+    "gulp-pug": "^3.3.0",
+    "gulp-replace": "*",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^2.0.1",
+    "gulp-util": "*",
+    "gulp-watch": "*",
+    "jcarrousel": "^1.0.1",
+    "jshint": "^2.9.4",
+    "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
+    "ng-table": "^2.2.0",
+    "slick-carousel": "^1.6.0",
+    "slideout": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "王耀冲",
+  "license": "ISC"
+}

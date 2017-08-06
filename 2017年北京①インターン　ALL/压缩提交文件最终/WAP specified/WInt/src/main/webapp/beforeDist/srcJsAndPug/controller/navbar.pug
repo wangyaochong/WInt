@@ -1,0 +1,53 @@
+nav.navbar.navbar-default(role='navigation' ng-controller="navbar")
+    // Brand and toggle get grouped for better mobile display
+    .navbar-header
+        button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+            span.sr-only Toggle navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+        //a.navbar-brand(href='#') Home
+        a.navbar-brand(ui-sref="branchGroupList" ng-class="{'currentNav':stateName=='branchGroupList'}" ng-click="stateName='branchGroupList' ") Branch
+    // Collect the nav links, forms, and other content for toggling
+    .collapse.navbar-collapse.navbar-ex1-collapse
+        ul.nav.navbar-nav
+            //li
+                a(ui-sref="branchGroupList" ng-class="{'currentNav':stateName=='branchGroupList'}" ng-click="stateName='branchGroupList' ") Branch
+            li
+                a(ui-sref='foodList' ng-class="{'currentNav':stateName=='foodList'}" ng-click="stateName='foodList'  ")  Food
+            li
+                a(ui-sref='orderList' ng-class="{'currentNav':stateName=='orderList'}" ng-click="stateName='orderList'  ")  Order
+            li
+                a(ui-sref='productList'   ng-class="{'currentNav':stateName=='productList'}" ng-click="stateName='productList'  ") Inventory
+            li
+                a(ui-sref='statistics'   ng-class="{'currentNav':stateName=='statistics'}" ng-click="stateName='statistics'  ") Statistics
+            li
+                a(ui-sref='productList'   ng-class="{'currentNav':stateName=='equipmentList'}" ng-click="stateName='equipmentList'  ") Equipment
+            li
+                a(ui-sref='customerList' ng-class="{'currentNav':stateName=='customerList'}" ng-click="stateName='customerList'  ")  Customer
+            li
+                a(ui-sref='employeeList'   ng-class="{'currentNav':stateName=='employeeList'}" ng-click="stateName='employeeList'  ") Employee
+            //li
+            //    a(ui-sref="componentNav") componentNav
+        //form.navbar-form.navbar-left(role='search')
+            .form-group
+                input.form-control(type='text', placeholder='Search')
+            button.btn.btn-default(type='submit') Submit
+        ul.nav.navbar-nav.navbar-right
+            li
+                a(href='/WInt/dist/html/logIn.html') Log In
+            li.dropdown
+                a.dropdown-toggle(href='#', data-toggle='dropdown')
+                    | Dropdown 
+                    b.caret
+                ul.dropdown-menu
+                    li
+                        a(href='#' ) Action
+                    li
+                        a(href='#') Another action
+                    li
+                        a(href='#') Something else here
+                    li
+                        a(href='#') Separated link
+    // /.navbar-collapse
+        

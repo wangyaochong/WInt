@@ -1,0 +1,31 @@
+
+<div ng-controller="equipmentAssetList">
+  <toaster-container></toaster-container>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div>
+        <h3 style="display:inline-block;"> Equipment Assets</h3>
+      </div>
+      <button class="btn btn-default pull-right" type="button" ng-click="addNewBranchGroup()">add</button>
+      <table class="table  table-hover" ng-table="customerListTableParams" show-filter="true" autocomplete="off">
+        <tbody>
+          <tr ng-repeat="item in $data">
+            <td ng-cloak="" title=" 'image' "><img alt="" ng-src="{{item.imagePath}}" style="height:100px;"/></td>
+            <td ng-cloak="" title=" 'name' " sortable=" 'name' " filter="{name:'text'}">{{item.name}}</td>
+            <td ng-cloak="" title=" 'price' " sortable=" 'price' " filter="{price:'text'}">{{item.price}}</td>
+            <!--td(ng-cloak="" title=" 'age' " filter="{age:'text'}") {{item.age}}-->
+            <!--td(ng-cloak="" title=" 'createDate' "   sortable=" 'createDate' "   filter=" {createDate:'text'} ") {{item.createDate|date:"yyyy/MM/dd"}}-->
+            <!--td(ng-cloak="" title=" 'gender' "  sortable=" 'gender' " filter="{gender:'text'}") {{item.gender}}-->
+            <td ng-cloak="" title=" 'operation' ">
+              <div class="btn-group pull-right">
+                <button class="btn btn-danger" type="button" ng-click="sendRepairMessage() ">need repair</button>
+                <button class="btn btn-default" type="button" ng-click="addNewBranchGroup(item.id);customerListTableParams.reload() ">edit</button>
+                <button class="btn btn-default" type="button" ng-click="deletebranchGroups(item.id);customerListTableParams.reload() ">delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

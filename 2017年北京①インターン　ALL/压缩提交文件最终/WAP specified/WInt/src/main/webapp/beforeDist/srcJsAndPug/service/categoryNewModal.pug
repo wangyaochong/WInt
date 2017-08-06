@@ -1,0 +1,15 @@
+
+
+.modal-content
+    .modal-body
+        form(action='', method='post', role='form')
+            legend Category
+            .form-group
+                label(for='name') name
+                input.form-control(type='text', name='name', id='name', placeholder='Input...' ng-model="branchGroup.name")
+            .form-group
+                label(for='description') description
+                input.form-control(type='text', name='description', id='description', placeholder='Input...'  ng-model="branchGroup.description" )
+    .modal-footer
+        button.btn.btn-default(type='button', ng-click="closeModal()") Close
+        button.btn.btn-primary(type='button' ng-click="clickYes()") Yes

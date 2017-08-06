@@ -84,8 +84,8 @@ public class TaskOrderProcess {
                     //只有在使用非完美库存管理才发送短信
                     if(CtProduct.idealProductManage==false&&(product.getCount()<product.getCountToAlarm()||product.getPredictedConsumingDays()<product.getDaysLeftToAlarm())){
                         System.out.println("发送短信："+product.getName()+"库存不足");
-//                        String response = SmsUtil.sendMessage(product.getName());
-//                        System.out.println(response);
+                        String response = SmsUtil.sendMessage(product.getName());
+                        System.out.println(response);
                     }
                     if(CtProduct.idealProductManage ==true&& (product.getCount()<product.getCountToAlarm()||product.getPredictedConsumingDays()<product.getDaysLeftToAlarm())){
                         product.setCount((int) (product.getCount()+product.getDaysToRecharge()*averageConsumeForOneDayInBranchByName));

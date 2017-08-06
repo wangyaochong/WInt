@@ -1,0 +1,14 @@
+
+<div class="container-fluid" ng-controller="statistics">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="form-group">
+        <select class="form-control inline-block" ng-options="x for x in figureOption" ng-model="currentFigureOption" style="width:200px;"></select>
+        <select class="form-control pull-right inline-block" ng-options="op for op in timeCycleOption" ng-model="currentTimeCycle" style="width:200px;"></select>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" id="main" style="height:80%;"></div>
+  <div style="height:40%;width:50%;display:inline-block;" id="{{b.branchGroup.name}}" ng-repeat="b in branchGroupFoodSellingCash" ng-if="currentFigureOption==figureOption[2]"></div>
+  <div style="height:40%;width:50%;display:inline-block;" id="{{b.branchGroup.name}}" ng-repeat="b in branchGroupFoodSellingCountList" ng-if="currentFigureOption==figureOption[3]"></div>
+</div>
